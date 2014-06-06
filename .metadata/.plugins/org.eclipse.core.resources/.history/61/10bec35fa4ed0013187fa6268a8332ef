@@ -1,0 +1,60 @@
+package com.example.weatherwithfriends;
+
+import android.app.Fragment;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+public class HomeFragment extends Fragment{
+	
+	FindWeather task;
+	Location here;
+	private LocationManager loc; 
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View rootView = inflater.inflate(R.layout.home_fragment, container, false);
+		
+		return rootView;
+		
+		//let's figure out where I am!
+		
+		String provider = "";
+		
+	
+		loc = Context.getSystemService(Context.LOCATION_SERVICE);
+		
+		if (loc.getAllServices().size() > 0) {
+			provider = loc.getAllProviders().get(0);
+			here = loc.getLastKnownLocation(provider);
+		}
+		
+//		double lng = here.getLongitude();
+//        double lat = here.getLatitude();
+   
+        FindWeather task = new FindWeather();
+        task.execute(here);
+		
+		
+	}
+	
+	private class FindWeather extends AsyncTask <Location, Void, String>{ 
+		private Context mContext;
+		private final String API_KEY = "86d6e9e9fcdda77c";
+		private String PHOTO_URL;
+		JSONObject jsonresult = null;
+		@Override
+		protected String doInBackground(Location... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+}

@@ -2,6 +2,17 @@ package com.example.weatherwithfriends;
 
 import java.util.ArrayList;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import com.example.weatherwithfriends.HomeFragment.FindWeather;
+import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
+
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -9,6 +20,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +38,12 @@ import android.os.Build;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
+ 	
+	FindWeather task;
+	Location here;
+	String provider;
+	LocationManager loc;
+
 		
 	private ArrayList<Friend> friends;
 	
@@ -35,7 +56,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
 	// Tab titles
-	private String[] tabs = { "Top Rated", "Games", "Movies" };
+	private String[] tabs = { "Add", "Home", "Friends" };
 	
 	
 	ArrayAdapter<String> arrayAdapter_friends;
@@ -81,6 +102,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
+		
+
+		//let's figure out where I am!
+	
+		loc = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
+		if (loc.getAllProviders().size() > 0) {
+			provider = loc.getAllProviders().get(0);
+			here = loc.getLastKnownLocation(provider);
+		}
+		
+        FindWeather task = new FindWeather();
+        task.execute(here);
+		
     }
     
 
@@ -136,6 +171,40 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private class FindWeather extends AsyncTask <Location, Void, String>{ 
+		private Context mContext;
+		private final String API_KEY = "86d6e9e9fcdda77c";
+		double lat = 0;
+		double lon = 0; 
+		
+		JSONObject jsonresult = null;
+		
+		@Override
+		protected String doInBackground(Location... params) {
+			if (params != null) {
+				lat = ((Location)params[0]).getLatitude();
+				lon = ((Location)params[0]).getLongitude();
+			}
+			
+			final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/geolookup/q/" + lat + "," + lon + ".json";
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpResponse response;
+			
+			String responseString = null;
+			
+			try {
+				response = httpclient.execute(new HttpGet(request));
+				
+				StatusLine statusLine = response.getStatusLine();
+				
+				if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+					
+				}
+			}
+		}
+
 	}
 
 }

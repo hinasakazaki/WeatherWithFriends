@@ -3,5 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
-
+	  <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Add a friend"
+        android:textSize="20dp"
+        android:layout_centerInParent="true"/>
+     
+    
 </fragment>
