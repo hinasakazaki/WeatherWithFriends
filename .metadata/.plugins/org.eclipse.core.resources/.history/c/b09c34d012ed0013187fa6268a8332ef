@@ -1,0 +1,5 @@
+package com.example.weatherwithfriends.adapter;
+
+public class TabsPagerAdapter {
+
+}
