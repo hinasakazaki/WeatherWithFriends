@@ -2,6 +2,10 @@ package com.example.weatherwithfriends;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -17,6 +21,10 @@ import org.json.JSONTokener;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -25,6 +33,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class HomeFragment extends Fragment{
 	
@@ -89,7 +99,7 @@ public class HomeFragment extends Fragment{
 		String responseString = null;
 		
 		try {
-			//next line throws error
+			//next line throws error - solved by allowing internet in manifest. lol.
 			response = httpclient.execute(new HttpGet(request));
 			
 			StatusLine statusLine = response.getStatusLine();
@@ -129,6 +139,9 @@ public class HomeFragment extends Fragment{
 		String iconurl = null;
 		JSONObject txt_forecast = null;
 		String forecasttext = null;
+		WeatherInfo rWeatherInfo = null;
+		//temporary solution, need to find a way to get Lat/Lon --> City, State
+		String location = "San Francisco, California";
 		
 		if (rString != null) {
 			//parse!
@@ -144,13 +157,33 @@ public class HomeFragment extends Fragment{
 			
 			}
 		
+		//get image stuff
+		URL iUrl = null;
+		try {
+			iUrl = new URL(iconurl);
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	InputStream content = null;
+		try {
+			content = (InputStream) iUrl.getContent();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Drawable icon= Drawable.createFromStream(content, "src");
 		
-		return null;
+	 	
+		rWeatherInfo = new WeatherInfo(icon, forecasttext, location);
+		
+		return rWeatherInfo;
 		
 	}
 	
 
-	class FindWeather extends AsyncTask <Location, Void, WeatherInfo>{ 
+	class FindWeather extends AsyncTask <Location, WeatherInfo, WeatherInfo>{ 
 		
 		private Context mContext;
 		private final String API_KEY = "86d6e9e9fcdda77c";
@@ -167,12 +200,20 @@ public class HomeFragment extends Fragment{
 				return HTTPRequest(here);
 		}
 		
-        protected void onPostExecute(Void result) {
-			
-				
-			}
-	
+        protected void onPostExecute(WeatherInfo result) {
+			//display weather icon
+        	
+		 	ImageView iv = (ImageView) getView().findViewById(R.id.icon);
+		 	iv.setImageDrawable(result.getIcon()); 
+		 	
+		 	TextView loc = (TextView)getView().findViewById(R.id.location);
+		 	loc.setText(result.getLoc());
+		 	
+		 	TextView tv = (TextView)getView().findViewById(R.id.description);
+		 	tv.setText(result.getText());
+		 
+		 	
         }
-		
+	}
 	
 }
