@@ -47,7 +47,6 @@ public class HomeFragment extends Fragment{
 	public void onAttach (Activity activity) {
 		Log.d("FRAGMENT", "onAttach");
 		super.onAttach(activity);
-		;
 		
 		//let's figure out where I am!
 		
