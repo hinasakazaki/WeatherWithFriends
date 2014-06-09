@@ -12,23 +12,8 @@ import android.app.ActionBar.TabListener;
 import android.app.ActionBar.Tab;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
-
-// 	
-//	private ArrayList<Friend> friends;
-//	
-//	ListView lv_home;
-//	ListView lv_add;
-//	ListView lv_social;
-	
 
 	private ViewPager viewPager;
 	private TabsPagerAdapter mAdapter;
@@ -36,10 +21,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	// Tab titles
 	private String[] tabs = { "Add", "Home", "Friends" };
 	
-	
-//	ArrayAdapter<String> arrayAdapter_friends;
-//	ArrayAdapter<String> arrayAdapter_location;
-	
+		
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -59,12 +41,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		for (String tab_name : tabs) {
 			actionBar.addTab(actionBar.newTab().setText(tab_name).setTabListener(this));
 		}
-//
+		
+		Log.v("Added tabs", "Ok?");
 //		/**
 //		 * on swiping the viewpager make respective tab selected
 //		 * */s
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
+		
 			@Override
 			public void onPageSelected(int position) {
 //				 on changing the page
@@ -88,7 +71,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	@Override
 	public void onTabSelected(Tab tab,
 			android.app.FragmentTransaction ft) {
-		// TODO Auto-generated method stub
 		viewPager.setCurrentItem(tab.getPosition());
 	}
 
@@ -107,7 +89,4 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-
 }

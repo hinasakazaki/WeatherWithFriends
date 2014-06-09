@@ -36,6 +36,8 @@ public class HomeFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		Log.v("HomeFragment", "Ok?");
 
 		View rootView = inflater.inflate(R.layout.home_fragment, container, false);
 		
@@ -45,7 +47,6 @@ public class HomeFragment extends Fragment{
 	
 	@Override
 	public void onAttach (Activity activity) {
-		Log.d("FRAGMENT", "onAttach");
 		super.onAttach(activity);
 		
 		//let's figure out where I am!
@@ -88,6 +89,7 @@ public class HomeFragment extends Fragment{
 		String responseString = null;
 		
 		try {
+			//next line throws error
 			response = httpclient.execute(new HttpGet(request));
 			
 			StatusLine statusLine = response.getStatusLine();
@@ -136,7 +138,7 @@ public class HomeFragment extends Fragment{
 			iconurl = forecast.getJSONObject("txt_forecast").getJSONArray("forecastday").getJSONObject(0).getJSONObject("icon_url");
 			
 			forecasttext = forecast.getJSONObject("txt_forecast").getJSONArray("forecastday").getJSONObject(0).getJSONObject("fcttxt");
-			
+		
 			}
 		return null;
 		
@@ -151,13 +153,12 @@ public class HomeFragment extends Fragment{
 		
 		@Override
 		protected void onPreExecute() {
-			
+			Log.v("FindWeather", "PreExecute");
 		}
 		
 		@Override
 		protected WeatherInfo doInBackground(Location... params) {
-			
-			Log.d("Okay got to background thread", null);
+				Log.v("FindWeather", "doInBackground");
 				return HTTPRequest(here);
 		}
 		
