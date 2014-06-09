@@ -27,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.app.ActionBar.TabListener;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -47,8 +48,6 @@ import android.os.Build;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
  	
-
-		
 	private ArrayList<Friend> friends;
 	
 	ListView lv_home;
@@ -58,7 +57,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	private ViewPager viewPager;
 	private TabsPagerAdapter mAdapter;
-	private ActionBar actionBar;
+	private android.app.ActionBar actionBar;
 	// Tab titles
 	private String[] tabs = { "Add", "Home", "Friends" };
 	
@@ -83,10 +82,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		actionBar.setHomeButtonEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);		
 
-		// Adding Tabs
+		// Adding Tabs errors here!!!
 		for (String tab_name : tabs) {
-			actionBar.addTab(actionBar.newTab().setText(tab_name)
-					.setTabListener(this));
+			actionBar.addTab(actionBar.newTab().setText(tab_name).setTabListener((TabListener) this));
 		}
 //
 //		/**
@@ -108,8 +106,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
-		});
-		
+		});	
 
 	
     }
@@ -152,19 +149,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
 	@Override
-	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		 viewPager.setCurrentItem(tab.getPosition());
 		
 	}
 
 	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+	public void onTabUnselected(Tab tav, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
 	}

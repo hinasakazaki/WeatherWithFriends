@@ -26,7 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends  android.support.v4.app.Fragment{
 	
 	Location here;
 	String provider;
@@ -109,7 +109,13 @@ public class HomeFragment extends Fragment{
             //TODO Handle problems..
         }
 		
-		WeatherInfo w = parseJSON(responseString);
+		WeatherInfo w = null;
+		try {
+			w = parseJSON(responseString);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return w;
 	}
@@ -124,7 +130,6 @@ public class HomeFragment extends Fragment{
 		
 		if (rString != null) {
 			//parse!
-			
 			jsonresult = (JSONObject) new JSONTokener(rString).nextValue();
 			
 			forecast = jsonresult.getJSONObject("forecast");
@@ -140,7 +145,6 @@ public class HomeFragment extends Fragment{
 	
 
 	class FindWeather extends AsyncTask <Location, Void, WeatherInfo>{ 
-		
 		
 		private Context mContext;
 		private final String API_KEY = "86d6e9e9fcdda77c";
