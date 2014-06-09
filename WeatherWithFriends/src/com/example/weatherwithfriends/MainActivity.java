@@ -43,6 +43,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		}
 		
 		Log.v("Added tabs", "Ok?");
+		
+		
 //		/**
 //		 * on swiping the viewpager make respective tab selected
 //		 * */s

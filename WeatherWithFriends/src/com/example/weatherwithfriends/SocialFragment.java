@@ -15,4 +15,6 @@ public class SocialFragment extends Fragment{
          
         return rootView;
     }
+	
+	
 }

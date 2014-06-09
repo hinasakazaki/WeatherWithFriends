@@ -4043,3 +4043,6 @@ Binding(CTRL+SHIFT+ARROW_LEFT,
 
 !ENTRY org.eclipse.ui 4 4 2014-06-09 13:57:57.121
 !MESSAGE Could not retrieve EHandlerService or ICommandService from context evaluation context fororg.eclipse.wst.xml.ui.reload.dependencies
+
+!ENTRY org.eclipse.ui 4 4 2014-06-09 16:35:16.911
+!MESSAGE Referenced part does not exist yet: org.eclipse.ui.views.ProblemView.

@@ -982,8 +982,10 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int ic_launcher=0x7f020057;
+        public static final int mike=0x7f020058;
     }
     public static final class id {
+        public static final int Name=0x7f05003e;
         public static final int action_bar=0x7f05001d;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001c;
@@ -995,15 +997,18 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050025;
-        public static final int action_settings=0x7f050042;
+        public static final int action_settings=0x7f050048;
         public static final int activity_chooser_view_content=0x7f050026;
-        public static final int add=0x7f05003e;
+        public static final int add=0x7f050043;
+        public static final int addButton=0x7f050042;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int checkbox=0x7f05002e;
+        public static final int city=0x7f050040;
+        public static final int cityEdit=0x7f050041;
         public static final int collapseActionView=0x7f05000d;
         public static final int default_activity_button=0x7f050029;
-        public static final int description=0x7f050041;
+        public static final int description=0x7f050047;
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
         public static final int dropdown=0x7f05000f;
@@ -1019,8 +1024,9 @@ containing a value of this type.
         public static final int image=0x7f050028;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f05002a;
-        public static final int location=0x7f050040;
+        public static final int location=0x7f050046;
         public static final int middle=0x7f050012;
+        public static final int nameEdit=0x7f05003f;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
         public static final int normal=0x7f050000;
@@ -1042,10 +1048,11 @@ containing a value of this type.
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
         public static final int showTitle=0x7f050006;
-        public static final int social=0x7f05003f;
+        public static final int social=0x7f050044;
         public static final int split_action_bar=0x7f05001f;
         public static final int submit_area=0x7f05003a;
         public static final int tabMode=0x7f050002;
+        public static final int temperature=0x7f050045;
         public static final int title=0x7f05002c;
         public static final int top_action_bar=0x7f050021;
         public static final int up=0x7f050022;
@@ -1183,6 +1190,8 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b0084;
+        public static final int RobotoButtonStyle=0x7f0b0086;
+        public static final int RobotoTextViewStyle=0x7f0b0085;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0b0063;

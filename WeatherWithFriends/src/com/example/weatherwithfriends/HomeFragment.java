@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment{
 			lon = location.getLongitude();
 		}
 		
-		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/forecast/q/" + lat + "," + lon + ".json";
+		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/conditions/q/" + lat + "," + lon + ".json";
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response;
 		
@@ -135,26 +135,27 @@ public class HomeFragment extends Fragment{
 	
 	private WeatherInfo parseJSON (String rString) throws JSONException {
 		JSONObject jsonresult = null;
-		JSONObject forecast = null;
+		JSONObject current_observation = null;
 		String iconurl = null;
-		JSONObject txt_forecast = null;
-		String forecasttext = null;
+		String txt_forecast = null;
+		String location = null;
+		String temperature = null;
 		WeatherInfo rWeatherInfo = null;
-		//temporary solution, need to find a way to get Lat/Lon --> City, State
-		String location = "San Francisco, California";
+		
 		
 		if (rString != null) {
 			//parse!
 			jsonresult = (JSONObject) new JSONTokener(rString).nextValue();
 			
-			forecast = jsonresult.getJSONObject("forecast");
+			current_observation = jsonresult.getJSONObject("current_observation");
 			
-			txt_forecast = forecast.getJSONObject("txt_forecast");
+			location = current_observation.getJSONObject("display_location").getString("full");
 		
-			iconurl = (String) txt_forecast.getJSONArray("forecastday").getJSONObject(0).get("icon_url");
+			iconurl = (String) current_observation.getString("icon_url");
+		
+			temperature = (String) current_observation.getString("temp_f") + "F";
 			
-			forecasttext = (String) txt_forecast.getJSONArray("forecastday").getJSONObject(0).get("fcttext");
-			
+			txt_forecast = (String) current_observation.getString("weather");
 			}
 		
 		//get image stuff
@@ -176,7 +177,7 @@ public class HomeFragment extends Fragment{
 		Drawable icon= Drawable.createFromStream(content, "src");
 		
 	 	
-		rWeatherInfo = new WeatherInfo(icon, forecasttext, location);
+		rWeatherInfo = new WeatherInfo(icon, temperature, location, txt_forecast);
 		
 		return rWeatherInfo;
 		
@@ -209,8 +210,11 @@ public class HomeFragment extends Fragment{
 		 	TextView loc = (TextView)getView().findViewById(R.id.location);
 		 	loc.setText(result.getLoc());
 		 	
-		 	TextView tv = (TextView)getView().findViewById(R.id.description);
-		 	tv.setText(result.getText());
+		 	TextView tv = (TextView)getView().findViewById(R.id.temperature);
+		 	tv.setText(result.getTemperature());
+		 
+		 	TextView dv = (TextView)getView().findViewById(R.id.description);
+		 	dv.setText(result.getText());
 		 
 		 	
         }
