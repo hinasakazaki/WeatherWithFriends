@@ -1,16 +1,23 @@
 package com.example.weatherwithfriends;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.FutureTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
-import com.example.weatherwithfriends.HomeFragment.FindWeather;
 import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
 
 import android.support.v7.app.ActionBar.Tab;
@@ -25,6 +32,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,10 +47,6 @@ import android.os.Build;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
  	
-	FindWeather task;
-	Location here;
-	String provider;
-	LocationManager loc;
 
 		
 	private ArrayList<Friend> friends;
@@ -67,6 +71,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		Log.d("Hello? Hello?", "");
+		
+		
 		// Initilization
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
@@ -81,16 +88,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			actionBar.addTab(actionBar.newTab().setText(tab_name)
 					.setTabListener(this));
 		}
-
-		/**
-		 * on swiping the viewpager make respective tab selected
-		 * */
+//
+//		/**
+//		 * on swiping the viewpager make respective tab selected
+//		 * */
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int position) {
-				// on changing the page
-				// make respected tab selected
+//				 on changing the page
+//				 make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
 			}
 
@@ -104,18 +111,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		});
 		
 
-		//let's figure out where I am!
 	
-		loc = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		
-		if (loc.getAllProviders().size() > 0) {
-			provider = loc.getAllProviders().get(0);
-			here = loc.getLastKnownLocation(provider);
-		}
-		
-        FindWeather task = new FindWeather();
-        task.execute(here);
-		
     }
     
 
@@ -173,38 +169,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		
 	}
 	
-	private class FindWeather extends AsyncTask <Location, Void, String>{ 
-		private Context mContext;
-		private final String API_KEY = "86d6e9e9fcdda77c";
-		double lat = 0;
-		double lon = 0; 
-		
-		JSONObject jsonresult = null;
-		
-		@Override
-		protected String doInBackground(Location... params) {
-			if (params != null) {
-				lat = ((Location)params[0]).getLatitude();
-				lon = ((Location)params[0]).getLongitude();
-			}
-			
-			final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/geolookup/q/" + lat + "," + lon + ".json";
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse response;
-			
-			String responseString = null;
-			
-			try {
-				response = httpclient.execute(new HttpGet(request));
-				
-				StatusLine statusLine = response.getStatusLine();
-				
-				if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-					
-				}
-			}
-		}
-
-	}
+	
 
 }
