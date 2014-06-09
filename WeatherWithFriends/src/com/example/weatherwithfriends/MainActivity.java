@@ -1,37 +1,16 @@
 package com.example.weatherwithfriends;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.FutureTask;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
 
 import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,9 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
-import android.os.Build;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
@@ -57,7 +33,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	private ViewPager viewPager;
 	private TabsPagerAdapter mAdapter;
-	private android.app.ActionBar actionBar;
+	private ActionBar actionBar;
 	// Tab titles
 	private String[] tabs = { "Add", "Home", "Friends" };
 	
@@ -70,8 +46,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Log.d("Hello? Hello?", "");
-		
 		
 		// Initilization
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -89,7 +63,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //
 //		/**
 //		 * on swiping the viewpager make respective tab selected
-//		 * */
+//		 * */s
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
@@ -148,20 +122,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
 
+	
+
+
 	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+	public void onTabSelected(android.app.ActionBar.Tab tab,
+			android.app.FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
 	}
 
+
 	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		 viewPager.setCurrentItem(tab.getPosition());
+	public void onTabUnselected(android.app.ActionBar.Tab tab,
+			android.app.FragmentTransaction ft) {
+		// TODO Auto-generated method stub
 		
 	}
 
+
 	@Override
-	public void onTabUnselected(Tab tav, FragmentTransaction ft) {
+	public void onTabReselected(android.app.ActionBar.Tab tab,
+			android.app.FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -26,7 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class HomeFragment extends  android.support.v4.app.Fragment{
+public class HomeFragment extends Fragment{
 	
 	Location here;
 	String provider;

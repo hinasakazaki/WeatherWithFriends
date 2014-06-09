@@ -1,27 +1,21 @@
 package com.example.weatherwithfriends.adapter;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-
 import com.example.weatherwithfriends.AddFragment;
 import com.example.weatherwithfriends.HomeFragment;
 import com.example.weatherwithfriends.SocialFragment;
 
-import android.app.Fragment;
-import android.app.Fragment.SavedState;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 	
-	public TabsPagerAdapter(android.support.v4.app.FragmentManager fm) {
+	public TabsPagerAdapter(FragmentManager fm) {
 	        super(fm);
 	    }
 	 
 	    @Override
-	    public android.support.v4.app.Fragment getItem(int index) {
+	    public Fragment getItem(int index) {
 	 
 	        switch (index) {
 	        case 0:
