@@ -126,8 +126,9 @@ public class HomeFragment extends Fragment{
 	private WeatherInfo parseJSON (String rString) throws JSONException {
 		JSONObject jsonresult = null;
 		JSONObject forecast = null;
-		JSONObject iconurl = null;
-		JSONObject forecasttext = null;
+		String iconurl = null;
+		JSONObject txt_forecast = null;
+		String forecasttext = null;
 		
 		if (rString != null) {
 			//parse!
@@ -135,11 +136,15 @@ public class HomeFragment extends Fragment{
 			
 			forecast = jsonresult.getJSONObject("forecast");
 			
-			iconurl = forecast.getJSONObject("txt_forecast").getJSONArray("forecastday").getJSONObject(0).getJSONObject("icon_url");
-			
-			forecasttext = forecast.getJSONObject("txt_forecast").getJSONArray("forecastday").getJSONObject(0).getJSONObject("fcttxt");
+			txt_forecast = forecast.getJSONObject("txt_forecast");
 		
+			iconurl = (String) txt_forecast.getJSONArray("forecastday").getJSONObject(0).get("icon_url");
+			
+			forecasttext = (String) txt_forecast.getJSONArray("forecastday").getJSONObject(0).get("fcttext");
+			
 			}
+		
+		
 		return null;
 		
 	}
