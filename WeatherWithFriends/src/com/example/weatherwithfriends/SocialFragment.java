@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class SocialFragment extends Fragment{
 	@Override
@@ -22,15 +23,10 @@ public class SocialFragment extends Fragment{
             Bundle savedInstanceState) {
  
         View rootView = inflater.inflate(R.layout.social_fragment, container, false);
-         
-        return rootView;
-    }
-	
-	@Override
-	public void onAttach (Activity activity) {
-		super.onAttach(activity);
+        
+		ListView list = (ListView) rootView.findViewById(R.id.list);
 		
-		
+
 		ArrayList<Friend> friendsList = null;
 		
 		//get da list
@@ -43,9 +39,16 @@ public class SocialFragment extends Fragment{
 		
 		FriendArrayAdapter adapter = new FriendArrayAdapter(this.getActivity().getBaseContext(), friendsList);
 		
+		list.setAdapter(adapter);
 		
+        return rootView;
+    }
+	
+	@Override
+	public void onAttach (Activity activity) {
+		super.onAttach(activity);
 		
-		
+
 	}
 	
 }

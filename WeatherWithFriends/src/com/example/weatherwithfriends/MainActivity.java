@@ -21,9 +21,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	// Tab titles
 	private String[] tabs = { "Add", "Home", "Friends" };
 	
-	private ArrayList<Friend> friendsList;
+	Fragment HomeFragment;
 	
-		
+	private ArrayList<Friend> friendsList = new ArrayList<Friend>();
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -47,6 +48,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		Log.v("Added tabs", "Ok?");
 		
 		
+		
 //		/**
 //		 * on swiping the viewpager make respective tab selected
 //		 * */s
@@ -68,7 +70,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			}
 		});	
 
-	
+		//make sure friendslist isn't empty
+		Friend f = new Friend("Evan", "Hong_Kong", "", "");
+		friendsList.add(f);
+		Log.v("Friendslist", friendsList.toString());
     }
 
 
