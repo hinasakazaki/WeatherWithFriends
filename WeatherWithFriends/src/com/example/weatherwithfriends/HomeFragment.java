@@ -184,7 +184,7 @@ public class HomeFragment extends Fragment{
 	}
 	
 
-	class FindWeather extends AsyncTask <Location, WeatherInfo, WeatherInfo>{ 
+	class FindWeather extends AsyncTask <Location,WeatherInfo, WeatherInfo>{ 
 		
 		private Context mContext;
 		private final String API_KEY = "86d6e9e9fcdda77c";
