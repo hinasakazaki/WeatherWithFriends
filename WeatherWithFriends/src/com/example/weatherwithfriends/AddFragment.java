@@ -1,6 +1,10 @@
 package com.example.weatherwithfriends;
 
+import java.io.FileOutputStream;
+
 import android.support.v4.app.Fragment;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ public class AddFragment extends Fragment {
 	
 	//on click for add
 	public void add(View v) {
+		Friend f;
 		String name = null;
 		String location = null;
 		
@@ -31,8 +36,15 @@ public class AddFragment extends Fragment {
 			location = nameInput.getText().toString();
 		}
 		
+		//add friend in list
 		
-		//launch friends fragment
+		Activity mActivity = getActivity();
+		
+		f = new Friend(name, location, null, null);
+		
+		if (mActivity instanceof MainActivity) {
+			((MainActivity)mActivity).addFriend(f);
+		}
 		
 	}
 }

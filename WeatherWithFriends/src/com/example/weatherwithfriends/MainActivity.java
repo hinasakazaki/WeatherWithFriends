@@ -21,6 +21,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	// Tab titles
 	private String[] tabs = { "Add", "Home", "Friends" };
 	
+	private ArrayList<Friend> friendsList;
+	
 		
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,5 +92,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			android.app.FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void addFriend(Friend f) {
+		friendsList.add(f);
+	}
+	
+	public ArrayList<Friend> getFriendsList() {
+		return friendsList;
 	}
 }
