@@ -96,6 +96,8 @@ public class HomeFragment extends Fragment{
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response;
 		
+		Log.v("home url", request.toString());
+		
 		String responseString = null;
 		
 		try {

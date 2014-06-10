@@ -2,6 +2,8 @@ package com.example.weatherwithfriends;
 
 import java.io.FileOutputStream;
 
+import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
+
 import android.support.v4.app.Fragment;
 import android.app.Activity;
 import android.support.v4.app.FragmentTransaction;
@@ -51,24 +53,11 @@ public class AddFragment extends Fragment {
         		if (mActivity instanceof MainActivity) {
         			((MainActivity)mActivity).addFriend(f);
         		}
-        		
-        		// Create new fragment and transaction
-        		Fragment newFragment = new SocialFragment();
-        		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        		// Replace whatever is in the fragment_container view with this fragment,
-        		// and add the transaction to the back stack
-        		transaction.replace(R.id.pager, newFragment);
-        		transaction.addToBackStack(null);
-
-        		// Commit the transaction
-        		transaction.commit();            
-        		}
-
+            }
         });
+        		
         
         return rootView;
     
-    }
-	
+	}
 }

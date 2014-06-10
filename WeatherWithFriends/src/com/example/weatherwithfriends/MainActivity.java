@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		}
 		
 		Log.v("Added tabs", "Ok?");
-		
+	
 		
 		
 //		/**
@@ -74,6 +74,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		Friend f = new Friend("Evan", "Hong_Kong", "", "");
 		friendsList.add(f);
 		Log.v("Friendslist", friendsList.toString());
+		
+		changeTab(1);
+		
     }
 
 
@@ -105,5 +108,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	public ArrayList<Friend> getFriendsList() {
 		return friendsList;
+	}
+	
+	public void changeTab(Integer i) {
+		viewPager.setCurrentItem(i);
 	}
 }
