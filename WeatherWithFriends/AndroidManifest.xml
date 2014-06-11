@@ -19,7 +19,8 @@
         <activity
             android:name="com.example.weatherwithfriends.MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan"
+          >
             
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

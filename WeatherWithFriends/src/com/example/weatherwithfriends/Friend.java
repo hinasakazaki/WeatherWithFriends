@@ -1,10 +1,13 @@
 package com.example.weatherwithfriends;
 
+import android.graphics.drawable.Drawable;
+
 public class Friend {
 	private String name;
 	private String city;
 	private String state;
 	private String country;
+	private Drawable icon;
 	
 	Friend(String n, String c, String s, String co) {
 		this.name = n;

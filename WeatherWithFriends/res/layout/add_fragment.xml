@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="600dp"
+     android:background="#b3d8dc"
+    >
+    
+<RelativeLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:orientation="vertical"
-    android:background="#b3d8dc" >
+    >
     
     <!-- first row -->
 	   <ImageView android:id="@+id/icon"
@@ -75,6 +81,59 @@
     	      android:layout_marginRight="20dp"
     	    />
 	   
+	  <!-- fourth row -->
+	  
+	   <TextView
+    	    android:id="@+id/state"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentLeft="true"
+    	    android:layout_below="@id/city"
+    	    android:textSize="20dp" 
+    	    android:text="State" 
+    	    android:layout_marginTop="30dp"
+    	    android:layout_marginLeft="20dp"/>
+	   
+	   <EditText
+	       android:id="@+id/stateEdit"
+	        android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentRight="true"
+    	    android:layout_toRightOf="@id/city" 
+    	    android:layout_below="@id/cityEdit"
+    	     android:textSize="20dp" 
+    	     android:maxLength="2"
+    	     android:layout_marginTop="20dp"
+    	     android:layout_marginLeft="40dp"
+    	      android:layout_marginRight="20dp"
+    	    />
+	   
+	   <!-- fifth row -->
+	   
+	    <TextView
+    	    android:id="@+id/country"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentLeft="true"
+    	    android:layout_below="@id/state"
+    	    android:textSize="20dp" 
+    	    android:text="Country" 
+    	    android:layout_marginTop="30dp"
+    	    android:layout_marginLeft="20dp"/>
+	   
+	   <EditText
+	       android:id="@+id/countryEdit"
+	        android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentRight="true"
+    	    android:layout_toRightOf="@id/city" 
+    	    android:layout_below="@id/stateEdit"
+    	     android:textSize="20dp" 
+    	     android:layout_marginTop="20dp"
+    	     android:layout_marginLeft="40dp"
+    	      android:layout_marginRight="20dp"
+    	    />
+	   
     	<Button
             android:id="@+id/addButton"
             android:layout_height="wrap_content"
@@ -84,11 +143,13 @@
             android:textSize="20dp" 
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
+            android:layout_below="@id/country"
+            android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true"
             />
 
     	
 	   
 </RelativeLayout>
+
+</ScrollView>

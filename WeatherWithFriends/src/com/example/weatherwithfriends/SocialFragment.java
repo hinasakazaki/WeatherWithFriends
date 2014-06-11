@@ -12,7 +12,9 @@ import android.content.Context;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -50,5 +52,4 @@ public class SocialFragment extends Fragment{
 		
 
 	}
-	
 }

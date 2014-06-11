@@ -1,5 +1,10 @@
 package com.example.weatherwithfriends;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
@@ -23,7 +28,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	Fragment HomeFragment;
 	
-	private ArrayList<Friend> friendsList = new ArrayList<Friend>();
+	private static ArrayList<Friend> friendsList = new ArrayList<Friend>();
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		});	
 
 		//make sure friendslist isn't empty
-		Friend f = new Friend("Evan", "Hong_Kong", "", "");
+		
+		
+		Friend j = new Friend("Chris", "Mountain View", "CA", "");
+		friendsList.add(j);
+		Log.v("Friendslist", friendsList.toString());
+		
+		Friend f = new Friend("Evan", "Hong Kong", "", "");
 		friendsList.add(f);
 		Log.v("Friendslist", friendsList.toString());
 		
@@ -104,10 +115,30 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	public void addFriend(Friend f) {
 		friendsList.add(f);
+		String filename = "friends";
+		//save to file
+		FileOutputStream fos;
+		
+		try {
+			File friendsFile = new File("/sdcard/" + filename);
+			friendsFile.createNewFile();FileOutputStream fOut = new FileOutputStream(friendsFile);
+			OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+			myOutWriter.append(f.toString());
+			myOutWriter.close();
+			fOut.close();
+		} catch (FileNotFoundException e) {
+				e.printStackTrace();
+		} catch (IOException e) {
+				e.printStackTrace();}
+	
 	}
 	
 	public ArrayList<Friend> getFriendsList() {
 		return friendsList;
+	}
+	
+	public static void removeFriend(int i) {
+		friendsList.remove(i);
 	}
 	
 	public void changeTab(Integer i) {

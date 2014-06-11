@@ -2,6 +2,8 @@ package com.example.weatherwithfriends;
 
 import java.io.FileOutputStream;
 
+import org.w3c.dom.Text;
+
 import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
 
 import android.support.v4.app.Fragment;
@@ -33,26 +35,34 @@ public class AddFragment extends Fragment {
             public void onClick(View v) {
             	Friend f;
         		String name = null;
-        		String location = null;
+        		String city = null;
+        		String state = null;
+        		String country = null;
         		
         		//inputs
         		EditText nameInput = (EditText)getView().findViewById(R.id.nameEdit);
         		EditText cityInput = (EditText)getView().findViewById(R.id.cityEdit);
+        		EditText stateInput = (EditText)getView().findViewById(R.id.stateEdit);
+        		EditText countryInput = (EditText)getView().findViewById(R.id.countryEdit);
         		
-        		if (nameInput.getText().toString().length() > 0 && cityInput.getText().toString().length() > 0) {
-        			name = nameInput.getText().toString();
-        			location = cityInput.getText().toString();
-        		}
-        		
+        		name = nameInput.getText().toString();
+    			city= cityInput.getText().toString();
+    			state = stateInput.getText().toString();
+    			country = countryInput.getText().toString();
+    			
         		//add friend in list
         		
         		Activity mActivity = getActivity();
         		
-        		f = new Friend(name, location, "", "");
+        		f = new Friend(name, city, state, country);
         		
         		if (mActivity instanceof MainActivity) {
         			((MainActivity)mActivity).addFriend(f);
         		}
+        		
+        		CharSequence text = "Added " + name + " to your friends list!";
+        		//toast text
+        		Toast.makeText(getActivity().getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
         		
