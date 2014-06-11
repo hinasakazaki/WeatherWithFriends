@@ -29,10 +29,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private ActionBar actionBar;
 	// Tab titles
 	private String[] tabs = { "Add", "Home", "Friends" };
-	
-	Fragment HomeFragment;
-	
-	private static ArrayList<Friend> friendsList = new ArrayList<Friend>();
+
+	Fragment HomeFragment;	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +76,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});	
-
-		//make sure friendslist isn't empty
-		
-		
-		Friend j = new Friend("Chris", "Mountain View", "CA", "");
-		addFriend(j);
-		Log.v("Friendslist", friendsList.toString());
-		
-		Friend f = new Friend("Evan", "Hong Kong", "", "");
-		addFriend(f);
-		Log.v("Friendslist", friendsList.toString());
-		
-		changeTab(1);
-		
     }
 
 
@@ -117,63 +101,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		
 	}
 	
-	public void addFriend(Friend f) {
-		friendsList.add(f);
 
-		
-		/*
-		String filename = "friends";
-		//save to file
-		FileOutputStream fos;
-		
-		try {
-			File friendsFile = new File(Environment.getExternalStorageDirectory().getPath() + filename);
-			friendsFile.createNewFile();FileOutputStream fOut = new FileOutputStream(friendsFile);
-			OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-			//append new friend to list?
-			myOutWriter.append(f.toString());
-			myOutWriter.close();
-			Log.v("File written", filename);
-			fOut.close();
-		} catch (FileNotFoundException e) {
-				e.printStackTrace();
-		} catch (IOException e) {
-				e.printStackTrace();}
-				*/
-	}
-	
-	public ArrayList<Friend> getFriendsList() {
-		
-		
-		/*
-		ArrayList<Friend> returnList = new ArrayList<Friend>();
-		//read from file
-		String filename = "friends";
-		StringBuffer stringBuffer = new StringBuffer();
-		String aDataRow = "";
-		String aBuffer = "";
-		
-		try {
-			File myFile = new File(Environment.getExternalStorageDirectory().getPath() + filename);
-			FileInputStream fIn = new FileInputStream(myFile);
-			BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
-			while ((aDataRow = myReader.readLine()) != null) {
-				aBuffer += aDataRow + "\n";
-				returnList.add(aDataRow);
-				Log.v("Reading file", aDataRow);
-			}
-			myReader.close();
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
-		*/
-		return friendsList;
-	}
-	
-	public static void removeFriend(int i) {
-		friendsList.remove(i);
-	}
-	
 	public void changeTab(Integer i) {
 		viewPager.setCurrentItem(i);
 	}

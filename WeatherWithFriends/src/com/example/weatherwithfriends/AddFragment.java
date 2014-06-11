@@ -5,11 +5,15 @@ import java.io.FileOutputStream;
 import org.w3c.dom.Text;
 
 import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
+import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
+import com.example.weatherwithfriends.friends.database.FriendTable;
 
 import android.support.v4.app.Fragment;
 import android.app.Activity;
 import android.support.v4.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,8 @@ import android.widget.Toast;
 
 public class AddFragment extends Fragment {
 	Button addButton = null;
+	
+	private Uri friendUri;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +57,7 @@ public class AddFragment extends Fragment {
     			country = countryInput.getText().toString();
     			
         		//add friend in list
-        		
+        		/*
         		Activity mActivity = getActivity();
         		
         		f = new Friend(name, city, state, country);
@@ -59,8 +65,20 @@ public class AddFragment extends Fragment {
         		if (mActivity instanceof MainActivity) {
         			((MainActivity)mActivity).addFriend(f);
         		}
+        		*/
+    			
+    			ContentValues values = new ContentValues();
+    			
+    			values.put(FriendTable.COLUMN_FRIEND, name);
+    			values.put(FriendTable.COLUMN_CITY, city);
+    			values.put(FriendTable.COLUMN_STATE, state);
+    			values.put(FriendTable.COLUMN_COUNTRY, country);
         		
+    			friendUri = getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, values);
+    			
+    			
         		CharSequence text = "Added " + name + " to your friends list!";
+        		
         		//toast text
         		Toast.makeText(getActivity().getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }

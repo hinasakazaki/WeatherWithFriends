@@ -61,10 +61,7 @@ public class SocialFragment extends Fragment{
 			friendsList = ((MainActivity)mActivity).getFriendsList();
 		}
 		
-		
-		
 		FriendArrayAdapter adapter = new FriendArrayAdapter(this.getActivity().getBaseContext(), friendsList);
-		
 		
         */
 		
