@@ -87,6 +87,8 @@ public class HomeFragment extends Fragment{
 		double lat = 0;
 		double lon = 0;
 		
+		WeatherInfo w = null;
+		
 		if (location != null) {
 			lat = location.getLatitude();
 			lon = location.getLongitude();
@@ -113,6 +115,7 @@ public class HomeFragment extends Fragment{
                 responseString = out.toString();
 			} else {
 				//close connection 
+				w = new WeatherInfo(null, "No Connection", "No Connection", "No Connection");
 				response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
 			}
@@ -122,7 +125,7 @@ public class HomeFragment extends Fragment{
             //TODO Handle problems..
         }
 		
-		WeatherInfo w = null;
+		
 		try {
 			w = parseJSON(responseString);
 		} catch (JSONException e) {
