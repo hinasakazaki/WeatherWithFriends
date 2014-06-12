@@ -3,7 +3,6 @@ package com.example.weatherwithfriends;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,26 +17,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class WeatherInfo  {
-	private String state;
-	private String city;
-	private String country;
 	private Drawable icon;
 	private String forecasttext;
 	private String location;
 	private String temperature;
 	
-	public WeatherInfo(String t, String l, String f){
-		this.forecasttext = f;
-		this.temperature = t;
-		this.location = l;
+	public WeatherInfo(String city, String state, String country){
+		String[] here = new String[] {city, state, country};
+		new FindWeather().execute(here);
+	}
+	
+	public WeatherInfo(Location loc, Context context) {
+		new FindWeather2(context).execute(loc);
 	}
 	
 	public Drawable getIcon(){
@@ -56,17 +55,8 @@ public class WeatherInfo  {
 		return location;
 	}
 	
-	class findWeather extends AsyncTask <String, Void, WeatherInfo>{ 
-//		private final WeakReference imageViewReference;
-//		private final WeakReference textViewReference;
+	class FindWeather extends AsyncTask <String, Void, WeatherInfo>{ 
 		private final String API_KEY = "86d6e9e9fcdda77c";
-		
-		
-		public findWeather (ImageView imageView, TextView textView) {
-			imageViewReference = new WeakReference(imageView);
-			textViewReference = new WeakReference(textView);
-		}
-		
 		
 		@Override
 		protected void onPreExecute() {
@@ -75,17 +65,11 @@ public class WeatherInfo  {
 
 		
         protected void onPostExecute(WeatherInfo result) {
-//        	ImageView imageView = (ImageView) imageViewReference.get();
-//        	TextView textView = (TextView) textViewReference.get();
-//        	
-//			imageView.setImageDrawable(result.getIcon());
-//			textView.setText((result.getText()) + " "+ result.getTemperature());
         }
 
 
 		@Override
 		protected WeatherInfo doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			return HTTPRequest(params);
 		}
 	}
@@ -135,9 +119,8 @@ public class WeatherInfo  {
             //TODO Handle problems..
         }
 		
-		
 		try {
-			w = parseJSON(responseString);
+			parseJSON(responseString);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -146,8 +129,10 @@ public class WeatherInfo  {
 		return w;
 	}
 
-
-	private WeatherInfo parseJSON (String rString) throws JSONException {
+	/* PARSON JSON FOR BOTH WEATHER FORMATS */
+	
+	private void parseJSON (String rString) throws JSONException {
+		
 		JSONObject jsonresult = null;
 		JSONObject current_observation = null;
 		String iconurl = null;
@@ -155,7 +140,6 @@ public class WeatherInfo  {
 		String location = null;
 		String temperature = null;
 		WeatherInfo rWeatherInfo = null;
-		
 		
 		if (rString != null) {
 			//parse!
@@ -188,12 +172,103 @@ public class WeatherInfo  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Drawable icon= Drawable.createFromStream(content, "src");
-	 	
-		rWeatherInfo = new WeatherInfo(icon, temperature, location, txt_forecast);
+		this.icon= Drawable.createFromStream(content, "src");
+		this.temperature = temperature;
+		this.location = location;
+		this.forecasttext = txt_forecast;
+	}
+	
+/* PLACE FOR HOME FRAGMENT CALLING FINDWEATHER2 */
+	
+	class FindWeather2 extends AsyncTask <Location, String, WeatherInfo>{ 
+
+		private Context mContext;
+		private final String API_KEY = "86d6e9e9fcdda77c";
 		
-		return rWeatherInfo;
-		
+		public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+		private ProgressDialog mProgressDialog;
+
+		public FindWeather2(Context context) {
+			this.mContext = context;
+			mProgressDialog = new ProgressDialog(context);
+			mProgressDialog.setMessage("Counting sunrays...");
+			mProgressDialog.setIndeterminate(false);
+			mProgressDialog.setMax(100);
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			mProgressDialog.setCancelable(false);
+			mProgressDialog.show();
+		}
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			mProgressDialog.show();
+		}
+
+		@Override
+		protected WeatherInfo doInBackground(Location... params) {
+				Log.v("FindWeather", "doInBackground");
+				return HTTPRequest2(params[0]);
+		}
+
+		protected void onProgressUpdate(String... progress) {
+			mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+		}
+        protected void onPostExecute(WeatherInfo result) {
+        	mProgressDialog.dismiss();
+        }
+	}
+        
+    private WeatherInfo HTTPRequest2(Location location) {
+		final String API_KEY = "86d6e9e9fcdda77c";
+
+		double lat = 0;
+		double lon = 0;
+
+		WeatherInfo w = null;
+
+		if (location != null) {
+			lat = location.getLatitude();
+			lon = location.getLongitude();
+		}
+
+		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/conditions/q/" + lat + "," + lon + ".json";
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpResponse response;
+
+		Log.v("home url", request.toString());
+
+		String responseString = null;
+
+		try {
+			//next line throws error - solved by allowing internet in manifest. lol.
+			response = httpclient.execute(new HttpGet(request));
+
+			StatusLine statusLine = response.getStatusLine();
+
+			if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+                response.getEntity().writeTo(out);
+                out.close();
+                responseString = out.toString();
+			} else {
+				//close connection 
+				response.getEntity().getContent().close();
+                throw new IOException(statusLine.getReasonPhrase());
+			}
+		} catch (ClientProtocolException e) {
+            //TODO Handle problems..
+        } catch (IOException e) {
+            //TODO Handle problems..
+        }
+
+
+		try {
+			parseJSON(responseString);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return w;
 	}
 	
 }

@@ -11,6 +11,9 @@ public class FriendTable {
 	  public static final String COLUMN_CITY = "city";
 	  public static final String COLUMN_STATE = "state";
 	  public static final String COLUMN_COUNTRY = "country";
+	  public static final String COLUMN_TEMP = "temp";
+	  public static final String COLUMN_TXT = "text";
+	  public static final String COLUMN_ICON = "icon";
 
 
 	  public static void onCreate(SQLiteDatabase database) {

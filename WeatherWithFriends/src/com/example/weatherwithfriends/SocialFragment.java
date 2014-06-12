@@ -1,8 +1,6 @@
 package com.example.weatherwithfriends;
 
 import java.util.ArrayList;
-
-import com.example.weatherwithfriends.HomeFragment.FindWeather;
 import com.example.weatherwithfriends.adapter.FriendArrayAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
