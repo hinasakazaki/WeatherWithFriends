@@ -6,6 +6,17 @@
     android:orientation="vertical" 
     android:layout_marginTop = "20dp">
     
+    <TextView android:id="@+id/add_friends"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent= "true"/>
+
+        
     <ListView
      android:id="@+id/list"
      android:layout_width="fill_parent"

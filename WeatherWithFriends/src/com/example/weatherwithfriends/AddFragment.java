@@ -15,6 +15,7 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,7 +57,11 @@ public class AddFragment extends Fragment {
     			state = stateInput.getText().toString();
     			country = countryInput.getText().toString();
     			
-        		//add friend in list
+    			nameInput.setText("");
+    			cityInput.setText("");
+    			stateInput.setText("");
+    			countryInput.setText("");
+    			//add friend in list
         		/*
         		Activity mActivity = getActivity();
         		
@@ -69,13 +74,16 @@ public class AddFragment extends Fragment {
     			
     			ContentValues values = new ContentValues();
     			
+    			Log.v("adding name", name);
+    			Log.v("adding city", city);
+    			
     			values.put(FriendTable.COLUMN_FRIEND, name);
     			values.put(FriendTable.COLUMN_CITY, city);
     			values.put(FriendTable.COLUMN_STATE, state);
     			values.put(FriendTable.COLUMN_COUNTRY, country);
         		
     			friendUri = getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, values);
-    			
+    			Log.v("Uri", friendUri.toString());
     			
         		CharSequence text = "Added " + name + " to your friends list!";
         		

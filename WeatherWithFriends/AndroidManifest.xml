@@ -32,7 +32,7 @@
         </activity>
         
         <provider
-		    android:name=".contentprovider.FriendContentProvider"
+		    android:name=".friends.contentprovider.FriendContentProvider"
 		    android:authorities="com.example.weatherwithfriends.friends.contentprovider" />
     </application>
 

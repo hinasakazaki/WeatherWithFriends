@@ -72,13 +72,10 @@ public class HomeFragment extends Fragment{
 			Log.d("Couldn't find", loc.toString());
 		}
 		
-     
 		//execute the HTTP Request
         if (here != null) {
         	new FindWeather().execute(here);
-        }
-		
-		
+        }		
 	}
 	
 	private WeatherInfo HTTPRequest(Location location) {

@@ -999,10 +999,11 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050025;
-        public static final int action_settings=0x7f050055;
+        public static final int action_settings=0x7f050056;
         public static final int activity_chooser_view_content=0x7f050026;
         public static final int add=0x7f050047;
         public static final int addButton=0x7f050046;
+        public static final int add_friends=0x7f050054;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int checkbox=0x7f05002e;
@@ -1031,7 +1032,7 @@ containing a value of this type.
         public static final int icon=0x7f05002b;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050028;
-        public static final int list=0x7f050054;
+        public static final int list=0x7f050055;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f05002a;
         public static final int location=0x7f050052;
