@@ -1,0 +1,38 @@
+package com.example.weatherwithfriends;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import android.graphics.drawable.Drawable;
+
+public class WeatherInfo  {
+	private Drawable icon;
+	private String forecasttext;
+	private String location;
+	private String temperature;
+	
+	public WeatherInfo(Drawable i, String t, String l){
+		this.icon = i;
+		//this.forecasttext = f;
+		this.temperature = t;
+		this.location = l;
+		
+	}
+	
+	public Drawable getIcon(){
+		return icon;
+
+	}
+	
+	public String getTemperature() {
+		return temperature;
+	}
+	
+	public String getText(){
+		return forecasttext;
+	}
+	
+	public String getLoc(){
+		return location;
+	}
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="40dp">
+
+    <ImageView
+        android:id="@+id/friend_icon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"/>
+  
+    <TextView
+        android:id="@+id/friend_name"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="30dp"
+      />
+    
+    <TextView
+        android:id="@+id/friend_location"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/friend_name"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+      />
+    
+    <TextView
+        android:id="@+id/friend_temp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/friend_location"
+        android:layout_centerHorizontal="true"        
+        android:textSize="20dp"
+        android:layout_marginBottom="50dp"
+      />
+    
+    <ImageView
+        android:id="@+id/friend_weather_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"/>
+    
+    <!-- Secret Remove Stuff! -->
+     <TextView
+        android:id="@+id/remove_friend"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="30dp"
+      />
+     
+     <Button
+            android:id="@+id/yesButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Yes"
+            android:background = "#62afb8"
+            android:textSize="20dp" 
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_alignParentRight = "true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            />
+      <Button
+            android:id="@+id/noButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Yes"
+            android:background = "#62afb8"
+            android:textSize="20dp" 
+       		android:layout_marginTop="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_alignParentRight= "true"
+            android:layout_below="@id/yesButton"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            />
+
+</RelativeLayout>

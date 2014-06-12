@@ -1,0 +1,12 @@
+package com.example.weatherwithfriends;
+
+public class WeatherInfo  {
+	private String iconurl;
+	private String forecasttext;
+	
+	public WeatherInfo(String i, String f){
+		this.iconurl = i;
+		this.forecasttext = f;
+		
+	}
+}
