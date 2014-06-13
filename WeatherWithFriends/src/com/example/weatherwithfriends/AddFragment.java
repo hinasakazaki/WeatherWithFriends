@@ -1,18 +1,10 @@
 package com.example.weatherwithfriends;
 
-import java.io.FileOutputStream;
-
-import org.w3c.dom.Text;
-
-import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
 import android.support.v4.app.Fragment;
-import android.app.Activity;
-import android.support.v4.app.FragmentTransaction;
 import android.content.ContentValues;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;

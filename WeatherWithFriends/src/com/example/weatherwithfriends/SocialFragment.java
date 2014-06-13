@@ -1,23 +1,19 @@
 package com.example.weatherwithfriends;
 
 import java.util.ArrayList;
+
 import com.example.weatherwithfriends.adapter.FriendArrayAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
 import android.support.v4.app.Fragment;
+import android.widget.SimpleCursorAdapter;
 import android.app.Activity;
-import android.app.ListFragment;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -25,27 +21,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SocialFragment extends Fragment{
+	
+	private SimpleCursorAdapter adapter;
+	ListView list;
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.social_fragment, container, false);
  
-		ArrayList<Friend> friendsList = new ArrayList<Friend>();
-		ListView list = (ListView) rootView.findViewById(R.id.list);
-		Uri friendsUri = FriendContentProvider.CONTENT_URI;
-		//An array specifying which columns to return
-		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
 		
+		/*
+		ArrayList<Friend> friendsList = new ArrayList<Friend>();
+		
+
 		ArrayList<String> friendsName = new ArrayList<String>(); 
 		ArrayList<String> friendsCity = new ArrayList<String>(); 
 		ArrayList<String>  friendsState = new ArrayList<String>(); 
 		ArrayList<String>  friendsCountry = new ArrayList<String>(); 
 		
-		Cursor cur = getActivity().getContentResolver().query(friendsUri, 
-				projection, 
-				null,
-				null,
-				null);
+
 		int i = 0;
 		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
 		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
@@ -53,7 +48,7 @@ public class SocialFragment extends Fragment{
 		int countryColumn = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
-			//make sure nullpointers are resolved
+			//make sure null pointers are resolved
 			if (cur.getString(nameColumn) == null) {
 				friendsName.add(i, " ");
 			}
@@ -112,7 +107,8 @@ public class SocialFragment extends Fragment{
 			FriendArrayAdapter adapter = new FriendArrayAdapter(this.getActivity().getBaseContext(), friendsList);
 			list.setAdapter(adapter);
 		}
-		
+		*/
+		fillData(rootView);
       
         return rootView;
     }
@@ -121,8 +117,28 @@ public class SocialFragment extends Fragment{
 	@Override
 	public void onAttach (Activity activity) {
 		super.onAttach(activity);
+	}
 	
-
+	
+	private void fillData(View v) {
+		
+		Uri friendsUri = FriendContentProvider.CONTENT_URI;
+		//An array specifying which columns to return
+		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
+		
+		Cursor cur = getActivity().getContentResolver().query(friendsUri, 
+				projection, 
+				null,
+				null,
+				null);
+		
+		ListView list = (ListView) v.findViewById(R.id.list);
+		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT };
+		
+		int[] to = new int[] {R.id.friend_name, R.id.friend_location, R.id.friend_temp};
+		adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to, 0);
+				
+		list.setAdapter(adapter);
 	}
 	
 }

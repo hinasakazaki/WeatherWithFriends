@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,6 +24,7 @@ import com.example.weatherwithfriends.friends.database.FriendTable;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.text.format.Time;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -73,10 +75,9 @@ public class HomeFragment extends Fragment{
 			Log.d("Couldn't find current location", loc.toString());
 		}
 		
-		//find weather
-        if (here != null) {
-        	currentWeather = new WeatherInfo(here, activity);
-        }	
+		//What time is it now?
+		Time today = new Time(Time.getCurrentTimezone());
+		today.setToNow();
         
         //Cursor shit
     	Uri friendsUri = FriendContentProvider.CONTENT_URI;
@@ -93,36 +94,38 @@ public class HomeFragment extends Fragment{
 		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
 		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
 		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int countryColumn = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
+		int tempColumn = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
+		int txtColumn = cur.getColumnIndex(FriendTable.COLUMN_TXT);
+		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
+		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
 		
 		//load from table, update
-		if (cur.getString(nameColumn) == "ME") {
-			
+		if (cur.getString(nameColumn) == "ME" && UpdateOk(today, cur.getString(timeColumn))) {
+			//UIs
+			//image view -- where to construct?
+			 ImageView iv = (ImageView) getView().findViewById(R.id.icon);
+			 iv.setImageDrawable(cur.getString(iconColumn)); 
+		
+			 TextView loc = (TextView)getView().findViewById(R.id.location);
+			 loc.setText(cur.getString(stateColumn) + ", " + cur.getString(stateColumn));
+		
+			 TextView tv = (TextView)getView().findViewById(R.id.temperature);
+			 tv.setText(cur.getString(tempColumn));
+		
+			 TextView dv = (TextView)getView().findViewById(R.id.description);
+			 dv.setText(cur.getString(txtColumn));
 		}
 		//if entry not match, then create	
 	    ContentValues myEntry = new ContentValues();
 	    myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
 	    myEntry.put(FriendTable.COLUMN_CITY, "San Francisco");
 	    myEntry.put(FriendTable.COLUMN_COUNTRY, "");
+	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 	    friendsUri = getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
 	    
 		cur.close();
-        
-        //UIs
-        while (currentWeather.getIcon() != null) {
-	        ImageView iv = (ImageView) getView().findViewById(R.id.icon);
-		 	iv.setImageDrawable(currentWeather.getIcon()); 
-	
-		 	TextView loc = (TextView)getView().findViewById(R.id.location);
-		 	loc.setText(currentWeather.getLoc());
-	
-		 	TextView tv = (TextView)getView().findViewById(R.id.temperature);
-		 	tv.setText(currentWeather.getTemperature());
-	
-		 	TextView dv = (TextView)getView().findViewById(R.id.description);
-		 	dv.setText(currentWeather.getText());
-        }
-        
+       
 	}
 	
+
 }

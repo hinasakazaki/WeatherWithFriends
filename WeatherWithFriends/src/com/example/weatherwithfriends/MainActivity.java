@@ -1,14 +1,5 @@
 package com.example.weatherwithfriends;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 
 import com.example.weatherwithfriends.adapter.TabsPagerAdapter;
 
@@ -16,10 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.app.ActionBar;
-import android.app.ActionBar.TabListener;
 import android.app.ActionBar.Tab;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
@@ -54,9 +43,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		
 		Log.v("Added tabs", "Ok?");
 		
-//		/**
-//		 * on swiping the viewpager make respective tab selected
-//		 * */s
+		// Swipe!
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 		
 			@Override
@@ -75,6 +62,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			}
 		});	
 		
+		//want to start with Home Screen
 		changeTab(1);
     }
 

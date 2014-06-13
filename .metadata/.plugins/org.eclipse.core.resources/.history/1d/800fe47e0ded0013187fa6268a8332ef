@@ -1,9 +1,0 @@
-package com.example.weatherwithfriends;
-
-public class Friend {
-	private String name;
-	private Double lat;
-	private Double lon;
-	
-	
-}

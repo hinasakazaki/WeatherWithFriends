@@ -14,6 +14,7 @@ public class FriendTable {
 	  public static final String COLUMN_TEMP = "temp";
 	  public static final String COLUMN_TXT = "text";
 	  public static final String COLUMN_ICON = "icon";
+	  public static final String COLUMN_TIME= "time";
 
 
 	  public static void onCreate(SQLiteDatabase database) {
