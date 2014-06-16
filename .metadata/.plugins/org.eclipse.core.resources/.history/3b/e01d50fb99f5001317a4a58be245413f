@@ -76,8 +76,6 @@ public class HomeFragment extends Fragment{
 		
 		
         
-		
-		/* 
         //Cursor shit
     	Uri friendsUri = FriendContentProvider.CONTENT_URI;
 		//An array specifying which columns to return
@@ -90,15 +88,6 @@ public class HomeFragment extends Fragment{
 				null);
         cur.moveToFirst();
         
-		
-		
-		*/
-		
-	
-		FriendController fc = new FriendController();
-		Cursor cur = fc.getFriends();
-		cur.moveToFirst();
-		
 		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
 		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
 		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
@@ -107,13 +96,12 @@ public class HomeFragment extends Fragment{
 		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
 		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
 		
-		
 		//load from table, update
-		if (cur.getString(nameColumn) == "ME") {
+		if (cur.getString(nameColumn) == "ME" && UpdateOk(today, cur.getString(timeColumn))) {
 			//UIs
 			//image view -- where to construct?
 			 ImageView iv = (ImageView) getView().findViewById(R.id.icon);
-			 iv.setImageBitmap(BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length)); 
+			 iv.setImageDrawable(cur.getString(iconColumn)); 
 		
 			 TextView loc = (TextView)getView().findViewById(R.id.location);
 			 loc.setText(cur.getString(stateColumn) + ", " + cur.getString(stateColumn));
@@ -124,7 +112,15 @@ public class HomeFragment extends Fragment{
 			 TextView dv = (TextView)getView().findViewById(R.id.description);
 			 dv.setText(cur.getString(txtColumn));
 		}
-	
+		//if entry not match, then create	
+	    ContentValues myEntry = new ContentValues();
+	    myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
+	    myEntry.put(FriendTable.COLUMN_CITY, "San Francisco");
+	    myEntry.put(FriendTable.COLUMN_COUNTRY, "");
+	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
+	    friendsUri = getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+	    
+		cur.close();
        
 	}
 	

@@ -69,7 +69,7 @@ public class FriendController {
 			myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 			myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 			myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-			myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); //to image?? result[3] is image
+			myEntry.put(FriendTable.COLUMN_ICON, result[3]); //to image?? result[3] is image
 			//{today.toString(), temperature, txt_forecast, iconurl}
 
 			getContentResolver().update(todoUri, myEntry, null, null)

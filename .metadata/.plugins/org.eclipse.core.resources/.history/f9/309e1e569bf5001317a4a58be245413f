@@ -15,7 +15,6 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.format.Time;
-import android.util.Log;
 
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
@@ -69,7 +68,7 @@ public class FriendController {
 			myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 			myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 			myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-			myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); //to image?? result[3] is image
+			myEntry.put(FriendTable.COLUMN_ICON, result[3]); //to image?? result[3] is image
 			//{today.toString(), temperature, txt_forecast, iconurl}
 
 			getContentResolver().update(todoUri, myEntry, null, null)
@@ -137,8 +136,8 @@ public class FriendController {
 		} catch (Exception e) {
 			Log.d("ImageManager", "Error" +e.toString());
 		}
-
-		return null;
+		
+		return icon;
 
 	}
 }

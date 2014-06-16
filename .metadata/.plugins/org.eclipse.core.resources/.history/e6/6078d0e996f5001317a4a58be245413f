@@ -23,12 +23,12 @@ import android.util.Log;
 
 public class FindFriendWeather extends AsyncTask <String, String[], String[]>{ 
 	private final String API_KEY = "86d6e9e9fcdda77c";
-	private AsyncTaskCompleteListener<String[]> listener;
+	private AsyncTaskCompleteListener listener;
 	Context mContext;
 	String[] rsa;
 
 	
-	public FindFriendWeather(Context c, AsyncTaskCompleteListener<String[]> listener) {
+	public FindFriendWeather(Context c, AsyncTaskCompleteListener listener) {
 		this.listener = listener;
 		mContext = c;
 	}

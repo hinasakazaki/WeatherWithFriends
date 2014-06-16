@@ -4,5 +4,5 @@ import android.content.ContentValues;
 import android.content.Context;
 
 public interface AsyncTaskCompleteListener {
-	public void onTaskComplete(String[] result);
+	public void onTaskComplete(String[] result, ContentValues myEntry, Context c);
 }

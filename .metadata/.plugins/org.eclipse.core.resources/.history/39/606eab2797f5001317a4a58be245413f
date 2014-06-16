@@ -1,21 +1,15 @@
 package com.example.weatherwithfriends;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-
-import org.apache.http.util.ByteArrayBuffer;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.format.Time;
-import android.util.Log;
 
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
@@ -24,7 +18,6 @@ public class FriendController {
 	private boolean status = false;
 	private Uri friendUri;
 	Time today = new Time(Time.getCurrentTimezone());
-	public boolean asyncDone = false;
 	
 	public FriendController() {
 		today.setToNow();
@@ -44,15 +37,14 @@ public class FriendController {
 	   
 	    //call asynctask
 	    
-	    FindFriendWeather ffw = new FindFriendWeather(c, myEntry, new FetchMyDataTaskCompleteListener());
+	    FindFriendWeather ffw = new FindFriendWeather(c, new FetchMyDataTaskCompleteListener());
 	  
 	    ffw.execute(city, state, country);
 	 
 	    friendUri = c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
 	}
 	
-	public Cursor getFriends() {
-		return null;
+	public void getFriends() {
 		
 		//check for update, then asynctask
 		//return cursor for fragment to use
@@ -60,21 +52,18 @@ public class FriendController {
 	}
 	
 	
-	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener
+	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<String[]>
     {
-
-		@Override
-		public void onTaskComplete(String[] result) {
-
-			myEntry.put(FriendTable.COLUMN_TIME, result[0]);
-			myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
-			myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-			myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); //to image?? result[3] is image
-			//{today.toString(), temperature, txt_forecast, iconurl}
-
-			getContentResolver().update(todoUri, myEntry, null, null)
-			
-		}
+        @Override
+        public void onTaskComplete(String[] result)
+        {
+           ContentValues myEntry = new ContentValues();
+           myEntry.put(FriendTable.COLUMN_TIME, result[0]);
+           myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
+           myEntry.put(FriendTable.COLUMN_TXT, result[2]);
+           
+           //{today.toString(), temperature, txt_forecast, iconurl}
+        }
     }
 	
 	private boolean UpdateOk(Time t, String uT) {
@@ -111,7 +100,7 @@ public class FriendController {
 		return false;
 	}
 	
-	private byte[] getImage(String iconurl) {
+	private Drawable getImage(String iconurl) {
 		//get image stuff
 		URL iUrl = null;
 		try {
@@ -120,25 +109,18 @@ public class FriendController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+		InputStream content = null;
 		try {
-			URLConnection ucon = iUrl.openConnection();
-			
-			InputStream is = ucon.getInputStream();BufferedInputStream bis = new BufferedInputStream(is);
-			
-			ByteArrayBuffer baf = new ByteArrayBuffer(500);
-			int current = 0;
-			
-			while((current = bis.read()) != -1) {
-				baf.append((byte) current);
-			}
-			
-			return baf.toByteArray();
-		} catch (Exception e) {
-			Log.d("ImageManager", "Error" +e.toString());
-		}
+			content = (InputStream) iUrl.getContent();
 
-		return null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Drawable icon = Drawable.createFromStream(content, "src");
+		
+		return icon;
 
 	}
 }
