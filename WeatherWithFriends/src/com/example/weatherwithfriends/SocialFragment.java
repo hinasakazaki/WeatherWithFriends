@@ -2,7 +2,6 @@ package com.example.weatherwithfriends;
 
 import java.util.ArrayList;
 
-import com.example.weatherwithfriends.adapter.FriendArrayAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
@@ -49,21 +48,13 @@ public class SocialFragment extends Fragment{
 	
 	private void fillData(View v) {
 		
-		Uri friendsUri = FriendContentProvider.CONTENT_URI;
-		//An array specifying which columns to return
-		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
-		
-		Cursor cur = getActivity().getContentResolver().query(friendsUri, 
-				projection, 
-				null,
-				null,
-				null);
+		FriendController fc = new FriendController();
+		Cursor cur = fc.getFriends();
 		
 		ListView list = (ListView) v.findViewById(R.id.list);
 		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT };
 		
 		int[] to = new int[] {R.id.friend_name, R.id.friend_location, R.id.friend_temp};
-		
 		adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to, 0);
 			
 		list.setAdapter(adapter);
@@ -73,7 +64,7 @@ public class SocialFragment extends Fragment{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				DeleteItem(view, position);
+				DeleteItem(view, position, id);
 			}
 		});
 		
@@ -82,7 +73,7 @@ public class SocialFragment extends Fragment{
 	
 	/*Deleting functionality on press */
 	
-	private void DeleteItem(View v, int position){
+	private void DeleteItem(View v, int position, long id){
 
 		ImageView fView = (ImageView) v.findViewById(R.id.friend_icon);
 		
@@ -115,17 +106,18 @@ public class SocialFragment extends Fragment{
 		rFriend.setText("Remove " + friendname + " ?");
 		
 		yes.setVisibility(View.VISIBLE);
-		yes.setTag(position);
+		yes.setTag(id);
 		
 		no.setVisibility(View.VISIBLE);
-	     
+		
         yes.setOnClickListener(new OnClickListener() {
         	
             @Override
             public void onClick(View v) {
-            	FriendContentProvider.deleteItem(v);
+            	FriendController fc = new FriendController();
+            	Long tid = (Long)v.getTag();
+            	fc.deleteFriend(v, tid);
             }
-            	
            });
         
         no.setOnClickListener(new OnClickListener() { 

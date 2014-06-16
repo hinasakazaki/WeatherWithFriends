@@ -14,25 +14,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.example.weatherwithfriends.FriendController.FetchMyDataTaskCompleteListener;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 
-public class FindFriendWeather extends AsyncTask <String, String[], String[]>{ 
+public class FindFriendWeather<ContentValues> extends AsyncTask <String, String[], String[]>{ 
 	private final String API_KEY = "86d6e9e9fcdda77c";
-	private AsyncTaskCompleteListener<String[]> listener;
+	
+	private AsyncTaskCompleteListener listener;
 	Context mContext;
 	String[] rsa;
 
 	
-	public FindFriendWeather(Context c, AsyncTaskCompleteListener<String[]> listener) {
+	public FindFriendWeather(Context c, AsyncTaskCompleteListener listener) {
 		this.listener = listener;
 		mContext = c;
 	}
 	
+	public FindFriendWeather(Context c, ContentValues myEntry,
+			FetchMyDataTaskCompleteListener fetchMyDataTaskCompleteListener) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	protected String[] doInBackground(String... params) {
 		rsa = HTTPRequest(params);

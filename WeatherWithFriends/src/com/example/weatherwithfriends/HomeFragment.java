@@ -123,6 +123,8 @@ public class HomeFragment extends Fragment{
 		
 			 TextView dv = (TextView)getView().findViewById(R.id.description);
 			 dv.setText(cur.getString(txtColumn));
+		} else {
+			fc.addSelf("San Francisco", "CA", null);
 		}
 	
        

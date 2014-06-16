@@ -1,5 +1,7 @@
 package com.example.weatherwithfriends.friends.database;
 
+import java.util.HashMap;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -26,5 +28,6 @@ public class FriendsDatabaseHelper extends SQLiteOpenHelper {
 			int newVersion) {
 		FriendTable.onUpgrade(database, oldVersion, newVersion);
 	}
+	
 }
 

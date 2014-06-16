@@ -59,13 +59,6 @@ public class FriendContentProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		
-		//check update?
-		//What time is it now?
-		Time today = new Time(Time.getCurrentTimezone());
-		today.setToNow();
-		
-		//check with update times!?!??! :{()((( SI DONT KNOW HOW)))
-
 		// Uisng SQLiteQueryBuilder instead of query() method
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 

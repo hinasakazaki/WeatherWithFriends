@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.View;
 
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
@@ -35,30 +36,45 @@ public class FriendController {
 		//TODO
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addFriend(Context c, String name, String city, String state, String country){
 	    ContentValues myEntry = new ContentValues();
 	    myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
 	    myEntry.put(FriendTable.COLUMN_CITY, "San Francisco");
 	    myEntry.put(FriendTable.COLUMN_COUNTRY, "");
 	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
-	   
-	    //call asynctask
-	    
-	    FindFriendWeather ffw = new FindFriendWeather(c, myEntry, new FetchMyDataTaskCompleteListener());
-	  
-	    ffw.execute(city, state, country);
 	 
 	    friendUri = c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
 	}
 	
-	public Cursor getFriends() {
+	public void deleteFriend(View v, Long id) {
+		//View parent = (View) v.getParent();
+		Uri uri = Uri.parse(FriendContentProvider.CONTENT_URI + "/" + id);
+		FriendContentProvider fcp = new FriendContentProvider();
+		fcp.delete(uri, null, null);
+	}
+	
+	public Cursor getSelf() {
 		return null;
+	}
+	
+	public Cursor getFriends() {
 		
 		//check for update, then asynctask
 		//return cursor for fragment to use
 		
+		Uri friendsUri = FriendContentProvider.CONTENT_URI;
+		//An array specifying which columns to return
+		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
+		
+		Cursor cur = this.query(friendsUri, 
+				projection, 
+				null,
+				null,
+				null);
+		
+		return cur;
 	}
-	
 	
 	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener
     {
@@ -69,7 +85,7 @@ public class FriendController {
 			myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 			myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 			myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-			myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); //to image?? result[3] is image
+			myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); 
 			//{today.toString(), temperature, txt_forecast, iconurl}
 
 			getContentResolver().update(todoUri, myEntry, null, null)
