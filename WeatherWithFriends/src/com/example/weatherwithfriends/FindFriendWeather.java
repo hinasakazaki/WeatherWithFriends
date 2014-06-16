@@ -21,28 +21,26 @@ import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 
-public class FindFriendWeather extends AsyncTask <String, Void, String[]>{ 
+public class FindFriendWeather extends AsyncTask <String, String[], String[]>{ 
 	private final String API_KEY = "86d6e9e9fcdda77c";
-	
+	private AsyncTaskCompleteListener listener;
 	Context mContext;
-	private OnTaskCompleted listener;
+	String[] rsa;
+
 	
-	public interface OnTaskCompleted{
-		void onTaskCompleted();
-	}
-	
-	public FindFriendWeather(OnTaskCompleted listener) {
+	public FindFriendWeather(Context c, AsyncTaskCompleteListener listener) {
 		this.listener = listener;
+		mContext = c;
 	}
 	
 	@Override
 	protected String[] doInBackground(String... params) {
+		rsa = HTTPRequest(params);
 		return HTTPRequest(params);
 	}
 	
 	protected void onPostExecute() {
-		if (listener != null) listener.onTaskCompleted();
-		//return the values??!?!?!?! >:
+		listener.onTaskComplete(rsa);
 	}
 
 

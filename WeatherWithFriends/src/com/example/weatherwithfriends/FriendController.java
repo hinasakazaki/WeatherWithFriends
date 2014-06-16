@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.format.Time;
 
-import com.example.weatherwithfriends.FindFriendWeather.OnTaskCompleted;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
@@ -26,15 +25,8 @@ public class FriendController {
 	
 	
 	public void addSelf (String city, String state, String country) {
-		
+		//TODO
 	}
-	
-	private OnTaskCompleted listener = new OnTaskCompleted() {
-		@Override
-		public void onTaskCompleted() {
-			status = true;
-		}
-    };
 	
 	public void addFriend(Context c, String name, String city, String state, String country){
 	    ContentValues myEntry = new ContentValues();
@@ -45,9 +37,10 @@ public class FriendController {
 	   
 	    //call asynctask
 	    
-	    FindFriendWeather ffw = new FindFriendWeather(listener);
+	    FindFriendWeather ffw = new FindFriendWeather(c, new FetchMyDataTaskCompleteListener());
 	  
 	    ffw.execute(city, state, country);
+	 
 	    
 	    friendUri = c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
 	}
@@ -59,6 +52,15 @@ public class FriendController {
 		
 	}
 	
+	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<String[]>
+    {
+ 
+        @Override
+        public void onTaskComplete(String[] result)
+        {
+            // do something with the result
+        }
+    }
 	
 	private boolean UpdateOk(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
