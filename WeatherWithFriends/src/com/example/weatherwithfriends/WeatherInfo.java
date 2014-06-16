@@ -24,38 +24,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class WeatherInfo  {
-	private Drawable icon;
-	private String forecasttext;
-	private String location;
-	private String temperature;
-	
-	public WeatherInfo(String city, String state, String country){
-		String[] here = new String[] {city, state, country};
-		new FindWeather().execute(here);
-	}
-	
-	public WeatherInfo(Location loc, Context context) {
-		new FindWeather2(context).execute(loc);
-	}
-	
-	public Drawable getIcon(){
-		return icon;
-	}
-	
-	public String getTemperature() {
-		return temperature;
-	}
-	
-	public String getText(){
-		return forecasttext;
-	}
-	
-	public String getLoc(){
-		return location;
-	}
-	
-	class FindWeather extends AsyncTask <String, Void, WeatherInfo>{ 
+class FindWeather extends AsyncTask <String, Void, WeatherInfo>{ 
 		private final String API_KEY = "86d6e9e9fcdda77c";
 		
 		@Override

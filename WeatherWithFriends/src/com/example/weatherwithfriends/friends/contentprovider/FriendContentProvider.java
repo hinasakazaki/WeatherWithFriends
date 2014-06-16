@@ -3,6 +3,7 @@ package com.example.weatherwithfriends.friends.contentprovider;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.example.weatherwithfriends.FindFriendWeather;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 import com.example.weatherwithfriends.friends.database.FriendsDatabaseHelper;
 
@@ -59,6 +60,11 @@ public class FriendContentProvider extends ContentProvider {
 			String[] selectionArgs, String sortOrder) {
 		
 		//check update?
+		//What time is it now?
+		Time today = new Time(Time.getCurrentTimezone());
+		today.setToNow();
+		
+		//check with update times!?!??! :{()((( SI DONT KNOW HOW)))
 
 		// Uisng SQLiteQueryBuilder instead of query() method
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
@@ -71,16 +77,16 @@ public class FriendContentProvider extends ContentProvider {
 
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
-		case FRIENDS:
-			break;
-		case FRIEND_ID:
-			// adding the ID to the original query
-			queryBuilder.appendWhere(FriendTable.COLUMN_ID + "="
-					+ uri.getLastPathSegment());
-			break;
-		default:
-			throw new IllegalArgumentException("Unknown URI: " + uri);
-		}
+			case FRIENDS:
+				break;
+			case FRIEND_ID:
+				// adding the ID to the original query
+				queryBuilder.appendWhere(FriendTable.COLUMN_ID + "="
+						+ uri.getLastPathSegment());
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown URI: " + uri);
+			}
 
 		SQLiteDatabase db = database.getWritableDatabase();
 		Cursor cursor = queryBuilder.query(db, projection, selection,
@@ -99,16 +105,20 @@ public class FriendContentProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
+	
+		
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsDeleted = 0;
+		
 		long id = 0;
 		switch (uriType) {
-		case FRIENDS:
-			id = sqlDB.insert(FriendTable.TABLE_FRIENDS, null, values);
-			break;
-		default:
-			throw new IllegalArgumentException("Unknown URI: " + uri);
-		}
+			case FRIENDS:
+				id = sqlDB.insert(FriendTable.TABLE_FRIENDS, null, values);
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown URI: " + uri);
+			}
+		
 		getContext().getContentResolver().notifyChange(uri, null);
 		return Uri.parse(BASE_PATH + "/" + id);
 	}
@@ -119,26 +129,26 @@ public class FriendContentProvider extends ContentProvider {
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsDeleted = 0;
 		switch (uriType) {
-		case FRIENDS:
-			rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS, selection,
-					selectionArgs);
-			break;
-		case FRIEND_ID:
-			String id = uri.getLastPathSegment();
-			if (TextUtils.isEmpty(selection)) {
-				rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS,
-						FriendTable.COLUMN_ID + "=" + id, 
-						null);
-			} else {
-				rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS,
-						FriendTable.COLUMN_ID + "=" + id 
-						+ " and " + selection,
+			case FRIENDS:
+				rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS, selection,
 						selectionArgs);
+				break;
+			case FRIEND_ID:
+				String id = uri.getLastPathSegment();
+				if (TextUtils.isEmpty(selection)) {
+					rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS,
+							FriendTable.COLUMN_ID + "=" + id, 
+							null);
+				} else {
+					rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS,
+							FriendTable.COLUMN_ID + "=" + id 
+							+ " and " + selection,
+							selectionArgs);
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown URI: " + uri);
 			}
-			break;
-		default:
-			throw new IllegalArgumentException("Unknown URI: " + uri);
-		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return rowsDeleted;
 	}
@@ -199,38 +209,6 @@ public class FriendContentProvider extends ContentProvider {
 			}
 		}
 	}
-	private boolean UpdateOk(Time t, String uT) {
-		//toString time is stored YYYYMMDDTHHMMSS
-		int uYear = Integer.parseInt(uT.substring(0,4));
-		int uMonth = Integer.parseInt(uT.substring(4,6));
-		int uDate = Integer.parseInt(uT.substring(6, 8));
-		int uHour = Integer.parseInt(uT.substring(9,11));
-		int uMinute = Integer.parseInt(uT.substring(11, 13));
-
-		if (uYear == t.year && uMonth == t.month && uDate == t.monthDay) {
-			if (uHour == t.hour) {
-				//same hour
-				if (t.minute - uMinute > 15) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			else if (t.hour > uHour) {
-				//difference between hours
-				if (((60-uMinute) + (t.minute)) <= 15) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			else {
-				return false;
-			}
-		}
-		return false;
-	}
+	
 
 } 

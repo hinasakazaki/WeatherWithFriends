@@ -17,12 +17,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
+import com.example.weatherwithfriends.friends.database.FriendTable;
+
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class FindWeather extends AsyncTask <String, Void, Void>{ 
 	private final String API_KEY = "86d6e9e9fcdda77c";
@@ -38,7 +46,7 @@ public class FindWeather extends AsyncTask <String, Void, Void>{
 
 
 	@Override
-	protected Void doInBackground(String... params) {
+	protected void doInBackground(String... params) {
 		HTTPRequest(params);
 	}
 
@@ -104,7 +112,6 @@ public class FindWeather extends AsyncTask <String, Void, Void>{
 		String txt_forecast = null;
 		String location = null;
 		String temperature = null;
-		WeatherInfo rWeatherInfo = null;
 		
 		if (rString != null) {
 			//parse!
@@ -137,9 +144,51 @@ public class FindWeather extends AsyncTask <String, Void, Void>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.icon= Drawable.createFromStream(content, "src");
-		this.temperature = temperature;
-		this.location = location;
-		this.forecasttext = txt_forecast;
+		
+		 //Cursor shit
+    	Uri friendsUri = FriendContentProvider.CONTENT_URI;
+		//An array specifying which columns to return
+		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
+		
+        Cursor cur = getContentResolver().query(friendsUri, 
+				projection, 
+				null,
+				null,
+				null);
+        cur.moveToFirst();
+        
+		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
+		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
+		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
+		int tempColumn = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
+		int txtColumn = cur.getColumnIndex(FriendTable.COLUMN_TXT);
+		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
+		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
+		
+		//load from table, update
+		if (cur.getString(nameColumn) == "ME" && UpdateOk(today, cur.getString(timeColumn))) {
+			//UIs
+			//image view -- where to construct?
+			 ImageView iv = (ImageView) getView().findViewById(R.id.icon);
+			 iv.setImageDrawable(cur.getString(iconColumn)); 
+		
+			 TextView loc = (TextView)getView().findViewById(R.id.location);
+			 loc.setText(cur.getString(stateColumn) + ", " + cur.getString(stateColumn));
+		
+			 TextView tv = (TextView)getView().findViewById(R.id.temperature);
+			 tv.setText(cur.getString(tempColumn));
+		
+			 TextView dv = (TextView)getView().findViewById(R.id.description);
+			 dv.setText(cur.getString(txtColumn));
+		}
+		//if entry not match, then create	
+	    ContentValues myEntry = new ContentValues();
+	    myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
+	    myEntry.put(FriendTable.COLUMN_CITY, "San Francisco");
+	    myEntry.put(FriendTable.COLUMN_COUNTRY, "");
+	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
+	    friendsUri = getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+	    
+		cur.close();
 	}
 }

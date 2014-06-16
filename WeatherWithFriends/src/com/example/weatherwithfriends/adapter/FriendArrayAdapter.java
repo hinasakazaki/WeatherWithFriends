@@ -97,7 +97,6 @@ public class FriendArrayAdapter extends ArrayAdapter<Friend> {
 	   String state = friends.get(position).getState();
 	   String country = friends.get(position).getCountry();
       
-	   thisWeather = new WeatherInfo(city, state, country);
      
       //swipe delete feature
        v.setOnTouchListener(new OnTouchListener(){

@@ -49,7 +49,6 @@ public class HomeFragment extends Fragment{
 	Location here;
 	String provider;
 	LocationManager loc;
-	WeatherInfo currentWeather;
 
 	
 	@Override
@@ -75,9 +74,7 @@ public class HomeFragment extends Fragment{
 			Log.d("Couldn't find current location", loc.toString());
 		}
 		
-		//What time is it now?
-		Time today = new Time(Time.getCurrentTimezone());
-		today.setToNow();
+		
         
         //Cursor shit
     	Uri friendsUri = FriendContentProvider.CONTENT_URI;

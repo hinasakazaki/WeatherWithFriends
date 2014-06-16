@@ -16,6 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,87 +34,9 @@ public class SocialFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.social_fragment, container, false);
- 
-		
-		/*
-		ArrayList<Friend> friendsList = new ArrayList<Friend>();
-		
-
-		ArrayList<String> friendsName = new ArrayList<String>(); 
-		ArrayList<String> friendsCity = new ArrayList<String>(); 
-		ArrayList<String>  friendsState = new ArrayList<String>(); 
-		ArrayList<String>  friendsCountry = new ArrayList<String>(); 
-		
-
-		int i = 0;
-		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
-		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
-		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int countryColumn = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
-		
-		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
-			//make sure null pointers are resolved
-			if (cur.getString(nameColumn) == null) {
-				friendsName.add(i, " ");
-			}
-			friendsName.add(i, cur.getString(nameColumn));
-			
-			
-			if (cur.getString(cityColumn) == null) {
-				friendsCity.add(i, " ");
-			}
-			friendsCity.add(i, cur.getString(cityColumn));
-			
-			
-			if (cur.getString(stateColumn) == null) {
-				friendsState.add(i, " ");
-			}
-			friendsState.add(i, cur.getString(stateColumn));
-			
-			if (cur.getString(countryColumn) == null) {
-				friendsCountry.add(i, " ");
-			}
-			friendsCountry.add(i, cur.getString(countryColumn));
-			i++;
-		}
-		
-		cur.close();
-		
-		int j = 0;
-		if (friendsName.size() > 0) {
-			for (String s : friendsName) {
-				String f = null;
-				String c = null;
-				String st = null;
-				String co = null;
-				
-				if (friendsName.get(j) != null) {
-					f = friendsName.get(j);
-				}
-				if (friendsCity.get(j) != null) {
-					c = friendsCity.get(j);
-				}
-				if (friendsState.get(j) != null) {
-					st = friendsState.get(j);
-				}
-				if (friendsCountry.get(j) != null) {
-					co = friendsCountry.get(j);
-				}
-				friendsList.add(new Friend(f, c, st, co));
-				j++;
-			}
-		} else {
-			TextView tv = (TextView) rootView.findViewById(R.id.add_friends);
-		 	tv.setText("It's lonely in here... Add some friends!");
-		}
-		
-		if (friendsList != null) {
-			FriendArrayAdapter adapter = new FriendArrayAdapter(this.getActivity().getBaseContext(), friendsList);
-			list.setAdapter(adapter);
-		}
-		*/
+ 	
 		fillData(rootView);
-      
+		
         return rootView;
     }
 
@@ -136,9 +63,114 @@ public class SocialFragment extends Fragment{
 		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT };
 		
 		int[] to = new int[] {R.id.friend_name, R.id.friend_location, R.id.friend_temp};
+		
 		adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to, 0);
-				
+			
 		list.setAdapter(adapter);
+		
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				DeleteItem(view, position);
+			}
+		});
+		
 	}
+	
+	
+	/*Deleting functionality on press */
+	
+	private void DeleteItem(View v, int position){
+
+		ImageView fView = (ImageView) v.findViewById(R.id.friend_icon);
+		
+		TextView fText = (TextView) v.findViewById(R.id.friend_name);
+		
+		String friendname = fText.getText().toString();
+		
+		TextView lText = (TextView) v.findViewById(R.id.friend_location);
+		
+		TextView tText = (TextView) v.findViewById(R.id.friend_temp);
+		
+		ImageView wView = (ImageView) v.findViewById(R.id.friend_weather_icon);
+	    
+		fView.setVisibility(View.GONE);
+		
+		fText.setVisibility(View.GONE);
+		
+		lText.setVisibility(View.GONE);
+		
+		tText.setVisibility(View.GONE);
+		
+		wView.setVisibility(View.GONE);
+		
+		TextView rFriend = (TextView) v.findViewById(R.id.remove_friend);
+		
+		Button yes = (Button)v.findViewById(R.id.yesButton);
+		
+		Button no = (Button)v.findViewById(R.id.noButton);
+		
+		rFriend.setText("Remove " + friendname + " ?");
+		
+		yes.setVisibility(View.VISIBLE);
+		yes.setTag(position);
+		
+		no.setVisibility(View.VISIBLE);
+	     
+        yes.setOnClickListener(new OnClickListener() {
+        	
+            @Override
+            public void onClick(View v) {
+            	FriendContentProvider.deleteItem(v);
+            }
+            	
+           });
+        
+        no.setOnClickListener(new OnClickListener() { 
+            @Override
+            public void onClick(View v) {
+            	Cancel((View)v.getParent());
+            }
+        });		
+	}
+	
+	private void Cancel(View v) {
+		ImageView fView = (ImageView) v.findViewById(R.id.friend_icon);
+		
+		TextView fText = (TextView) v.findViewById(R.id.friend_name);
+		
+		TextView lText = (TextView) v.findViewById(R.id.friend_location);
+		
+		TextView tText = (TextView) v.findViewById(R.id.friend_temp);
+		
+		ImageView wView = (ImageView) v.findViewById(R.id.friend_weather_icon);
+	    
+		fView.setVisibility(View.VISIBLE);
+		
+		fText.setVisibility(View.VISIBLE);
+		
+		lText.setVisibility(View.VISIBLE);
+		
+		tText.setVisibility(View.VISIBLE);
+		
+		wView.setVisibility(View.VISIBLE);
+
+		Button yes = (Button)v.findViewById(R.id.yesButton);
+		
+		Button no = (Button)v.findViewById(R.id.noButton);
+		
+		TextView rFriend = (TextView) v.findViewById(R.id.remove_friend);
+		
+		rFriend.setText("");
+		
+		yes.setVisibility(View.GONE);
+		
+		no.setVisibility(View.GONE);
+	}
+	
+	
+	
 	
 }

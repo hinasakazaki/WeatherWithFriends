@@ -53,33 +53,16 @@ public class AddFragment extends Fragment {
     			cityInput.setText("");
     			stateInput.setText("");
     			countryInput.setText("");
-    			//add friend in list
-        		/*
-        		Activity mActivity = getActivity();
-        		
-        		f = new Friend(name, city, state, country);
-        		
-        		if (mActivity instanceof MainActivity) {
-        			((MainActivity)mActivity).addFriend(f);
-        		}
-        		*/
     			
-    			ContentValues values = new ContentValues();
     			
-    			Log.v("adding name", name);
-    			Log.v("adding city", city);
+    			//go through friendcontroller to make a new entry in the database
+    			FriendController fc = new FriendController();
     			
-    			values.put(FriendTable.COLUMN_FRIEND, name);
-    			values.put(FriendTable.COLUMN_CITY, city);
-    			values.put(FriendTable.COLUMN_STATE, state);
-    			values.put(FriendTable.COLUMN_COUNTRY, country);
-        		
-    			friendUri = getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, values);
-    			Log.v("Uri", friendUri.toString());
+    			fc.addFriend(v.getContext(), name, city, state, country);
+    			
     			
         		CharSequence text = "Added " + name + " to your friends list!";
         		
-        		//toast text
         		Toast.makeText(getActivity().getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
