@@ -1,11 +1,7 @@
 package com.example.weatherwithfriends;
 
-import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
-import com.example.weatherwithfriends.friends.database.FriendTable;
-
 import android.support.v4.app.Fragment;
-import android.content.ContentValues;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +14,6 @@ import android.widget.Toast;
 
 public class AddFragment extends Fragment {
 	Button addButton = null;
-	
-	private Uri friendUri;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

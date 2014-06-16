@@ -1,0 +1,31 @@
+package com.example.weatherwithfriends;
+
+import android.content.ContentValues;
+
+import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
+import com.example.weatherwithfriends.friends.database.FriendTable;
+
+public class FriendController {
+	
+	public void addSelf (String city, String state, String country) {
+		
+	}
+	
+	
+	public void addFriend(String name, String city, String state, String country){
+		//if entry not match, then create	
+	    ContentValues myEntry = new ContentValues();
+	    myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
+	    myEntry.put(FriendTable.COLUMN_CITY, "San Francisco");
+	    myEntry.put(FriendTable.COLUMN_COUNTRY, "");
+	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
+	    friendsUri = getParent().getActivity().getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+	    
+		cur.close();
+		
+		
+	}
+	
+	
+	
+}
