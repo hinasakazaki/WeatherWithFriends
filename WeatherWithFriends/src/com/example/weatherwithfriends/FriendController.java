@@ -22,8 +22,7 @@ import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvi
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
 public class FriendController {
-	private boolean status = false;
-	private Uri friendUri;
+	private static Uri friendUri;
 	Time today = new Time(Time.getCurrentTimezone());
 	public boolean asyncDone = false;
 	
@@ -78,7 +77,7 @@ public class FriendController {
 		uTime = cur.getString(dateCol);
 		
 		if (!UpdateOk(today, uTime)) {
-			FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol), null);
+			FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
 			ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
 		}
 		
@@ -102,14 +101,15 @@ public class FriendController {
 			uTime = cur.getString(dateCol);
 			if (!UpdateOk(today, uTime)) {
 				//need to async!!! 
-				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol), null);
+				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
 				ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
 			}
 		}
 		return cur;
 	}
 	
-	public void UpdateFriendWeather(long id, Context c, String[] result) {
+	public static void UpdateFriendWeather(long id, Context c, String[] result) {
+		//today.toString(), temperature, txt_forecast, iconurl
 		ContentValues myEntry = new ContentValues();
 		
 		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
@@ -156,7 +156,7 @@ public class FriendController {
 		return false;
 	}
 	
-	private byte[] getImage(String iconurl) {
+	private static byte[] getImage(String iconurl) {
 		//get image stuff
 		URL iUrl = null;
 		try {

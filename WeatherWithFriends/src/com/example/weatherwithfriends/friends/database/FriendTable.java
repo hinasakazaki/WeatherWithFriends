@@ -7,7 +7,7 @@ public class FriendTable {
 	 // Database table
 	  public static final String TABLE_FRIENDS= "friend";
 	  public static final String COLUMN_ID = "_id";
-	  public static final String COLUMN_FRIEND= "friend";
+	  public static final String COLUMN_FRIEND = "friend";
 	  public static final String COLUMN_CITY = "city";
 	  public static final String COLUMN_STATE = "state";
 	  public static final String COLUMN_COUNTRY = "country";
@@ -20,7 +20,9 @@ public class FriendTable {
 	  public static void onCreate(SQLiteDatabase database) {
 		StringBuilder sb = new StringBuilder("create table if not exists ").append(TABLE_FRIENDS).append("(").append(COLUMN_ID)
 		.append(" integer primary key autoincrement, ").append(COLUMN_FRIEND).append(" text not null, ").append(COLUMN_CITY) 
-		.append(" text not null, ").append(COLUMN_STATE).append(" text not null, ").append(COLUMN_COUNTRY).append(" text not null").append(")");
+		.append(" text, ").append(COLUMN_STATE).append(" text, ").append(COLUMN_COUNTRY).
+		append(" text, ").append(COLUMN_TEMP).append(" text, ").append(COLUMN_TXT).append(" text, ").append(COLUMN_ICON)
+		.append(" text, ").append(COLUMN_TIME).append(" text not null").append(");");
 	    database.execSQL(sb.toString());
 	  }
 

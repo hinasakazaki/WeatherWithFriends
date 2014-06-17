@@ -1,42 +1,16 @@
 package com.example.weatherwithfriends;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -77,6 +51,8 @@ public class HomeFragment extends Fragment{
 		}
 	
 		FriendController fc = new FriendController();
+		fc.addSelf(activity, "San Francisco", "CA", "");
+	
 		Cursor cur = fc.getSelf(activity);
 		cur.moveToFirst();
 		MyContentObserver mObserver = new MyContentObserver(new Handler());
@@ -99,7 +75,7 @@ public class HomeFragment extends Fragment{
 			 iv.setImageBitmap(BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length)); 
 		
 			 TextView loc = (TextView)getView().findViewById(R.id.location);
-			 loc.setText(cur.getString(stateColumn) + ", " + cur.getString(stateColumn));
+			 loc.setText(cur.getString(cityColumn) + ", " + cur.getString(stateColumn));
 		
 			 TextView tv = (TextView)getView().findViewById(R.id.temperature);
 			 tv.setText(cur.getString(tempColumn));

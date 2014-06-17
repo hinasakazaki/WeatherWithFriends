@@ -1,6 +1,5 @@
 package com.example.weatherwithfriends.friends.database;
 
-import java.util.HashMap;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

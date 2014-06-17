@@ -26,23 +26,16 @@ import android.util.Log;
 public class FindFriendWeather extends AsyncTask <String, String[], String[]>{ 
 	private final String API_KEY = "86d6e9e9fcdda77c";
 	
-	private AsyncTaskCompleteListener listener;
+
 	Context mContext;
 	Long id;
 	String[] rsa;
 
 	
-	public FindFriendWeather(Context c, String id, AsyncTaskCompleteListener listener) {
-		this.listener = listener;
+	public FindFriendWeather(Context c, String id) {
 		mContext = c;
 		this.id = Long.valueOf(id);
 	}
-	
-	/*
-	public FindFriendWeather(Context c, ContentValues myEntry,
-			FetchMyDataTaskCompleteListener fetchMyDataTaskCompleteListener) {
-		// TODO Auto-generated constructor stub
-	}*/
 
 	@Override
 	protected String[] doInBackground(String... params) {
@@ -51,8 +44,7 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 	}
 	
 	protected void onPostExecute() {
-		FriendController fc = new FriendController();
-		fc.UpdateFriendWeather(id, mContext, rsa);
+		FriendController.UpdateFriendWeather(id, mContext, rsa);
 	}
 
 
@@ -64,12 +56,14 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 		String city = location[0];
 		String state = location[1];
 		String country = location[2];
+		String newCountry = "";
 	
 		
 		//replace all spaces with _
 		String newCity = city.replaceAll(" ",  "_").toLowerCase();
-		String newCountry = country.replaceAll(" ", "_").toLowerCase();
-		
+		if (country != null) {
+			newCountry = country.replaceAll(" ", "_").toLowerCase();
+		}
 		
 		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/conditions/q/" + newCountry + "/" + state + "/" + newCity + ".json";
 		HttpClient httpclient = new DefaultHttpClient();
