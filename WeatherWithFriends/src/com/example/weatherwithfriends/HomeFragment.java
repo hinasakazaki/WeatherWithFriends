@@ -35,8 +35,8 @@ public class HomeFragment extends Fragment{
 		
 
 		FriendController fc = new FriendController();
-		fc.addSelf(rootView.getContext(), "San Francisco", "CA", "");
 	
+		//check first time install
 		Cursor cur = fc.getSelf(rootView.getContext());
 		cur.moveToFirst();
 		MyContentObserver mObserver = new MyContentObserver(new Handler());
@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment{
 		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
 		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
 		
-		//UI stuff -- that's ok.
+		
 		TextView loc = (TextView)rootView.findViewById(R.id.location);
 		TextView tv = (TextView)rootView.findViewById(R.id.temperature);
 		TextView dv = (TextView)rootView.findViewById(R.id.description);
@@ -74,13 +74,11 @@ public class HomeFragment extends Fragment{
 			dv.setText(txtForecast);
 
 			//image view -- where to construct
-			iv.setImageBitmap(icon); 
-
-			 
-		} else {
-			fc.addSelf(rootView.getContext(), "San Francisco", "CA", null);
+			iv.setImageBitmap(icon);  
+		} else 
+		{
+			fc.addSelf(rootView.getContext(), "San Francisco", "CA", "");
 		}
-		
 		return rootView;
 	}
 	

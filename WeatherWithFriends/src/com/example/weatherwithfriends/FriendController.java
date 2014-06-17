@@ -78,7 +78,7 @@ public class FriendController {
 		
 		uTime = cur.getString(dateCol);
 		
-		if (!UpdateOk(today, uTime)) {
+		if (needsUpdate(today, uTime)) {
 			Log.v("The time that needs to be updated", uTime);
 			FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
 			ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
@@ -103,7 +103,7 @@ public class FriendController {
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
 			uTime = cur.getString(dateCol);
-			if (!UpdateOk(today, uTime) || (cur.getString(tempCol).length() < 1)) {
+			if (needsUpdate(today, uTime) || (cur.getString(tempCol).length() < 1)) {
 				//need to async!!! 
 				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
 				ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
@@ -128,7 +128,7 @@ public class FriendController {
 	}
 
 	
-	private boolean UpdateOk(Time t, String uT) {
+	private boolean needsUpdate(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
 		int uYear = Integer.parseInt(uT.substring(0,4));
 		int uMonth = Integer.parseInt(uT.substring(4,6));
@@ -140,31 +140,30 @@ public class FriendController {
 			if (uHour == t.hour) {
 				//same hour
 				if (t.minute - uMinute < 15) {
-					return true;
+					return false;
 				}
 				else {
 					Log.v("Needs to be updated!", ""+(t.minute-uMinute));
-					return false;
+					return true;
 				}
 			}
 			else if (t.hour > uHour) {
 				//difference between hours
 				if (((60-uMinute) + (t.minute)) <= 15) {
-					
-					return true;
+					return false;
 				}
 				else {
 					Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
-					return false;
+					return true;
 				}
 			}
 			else {
 				Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
-				return false;
+				return true;
 			}
 		}
-		Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
-		return false;
+		Log.v("Needs to be updated!", "different year, date or month");
+		return true;
 	}
 	
 	private static byte[] getImage(String iconurl) {
