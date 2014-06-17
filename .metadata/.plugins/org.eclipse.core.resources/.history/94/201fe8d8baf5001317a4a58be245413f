@@ -66,7 +66,10 @@ public class FriendController {
 	}
 	
 	public Cursor getFriends(Context c) {
-			
+		
+		//check for update, then asynctask
+		//return cursor for fragment to use
+		
 		Uri friendsUri = FriendContentProvider.CONTENT_URI;
 		
 		Cursor cur = c.getContentResolver().query(friendsUri, null, null, null, null);
@@ -87,9 +90,6 @@ public class FriendController {
 		return cur;
 	}
 	
-	private void updateFriendWeather(String id) {
-		
-	}
 	/*
 	
 	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener

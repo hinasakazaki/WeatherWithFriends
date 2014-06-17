@@ -66,30 +66,23 @@ public class FriendController {
 	}
 	
 	public Cursor getFriends(Context c) {
-			
+		
+		//check for update, then asynctask
+		//return cursor for fragment to use
+		
 		Uri friendsUri = FriendContentProvider.CONTENT_URI;
 		
 		Cursor cur = c.getContentResolver().query(friendsUri, null, null, null, null);
 		
 		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
-		
-		String uTime;
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-			uTime = cur.getString(dateCol);
-			if (!UpdateOk(today, uTime)) {
-				//need to async!!! 
-				updateFriendWeather(cur.getString(idCol));
-			}
+			
 		}
 		
 		return cur;
 	}
 	
-	private void updateFriendWeather(String id) {
-		
-	}
 	/*
 	
 	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener

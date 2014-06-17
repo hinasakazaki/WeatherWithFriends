@@ -26,6 +26,7 @@ public class AddFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+            	Friend f;
         		String name = null;
         		String city = null;
         		String state = null;

@@ -50,7 +50,7 @@ public class SocialFragment extends Fragment{
 	private void fillData(View v) {
 		
 		FriendController fc = new FriendController();
-		Cursor cur = fc.getFriends(v.getContext());
+		Cursor cur = fc.getFriends();
 		
 		/*
 		cur.registerContentObserver(FriendContentProvider.CONTENT_URI, true, mObserver = new ContentObserver(null) {

@@ -32,23 +32,16 @@ public class FriendController {
 	}
 	
 	
-	public void addSelf (Context c, String city, String state, String country) {
-		 ContentValues myEntry = new ContentValues();
-		 myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
-		 myEntry.put(FriendTable.COLUMN_CITY, city);
-		 myEntry.put(FriendTable.COLUMN_STATE, state);
-		 myEntry.put(FriendTable.COLUMN_COUNTRY, country);
-		 myEntry.put(FriendTable.COLUMN_TIME, today.toString());
-		 
-		 friendUri = c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+	public void addSelf (String city, String state, String country) {
+		//TODO
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addFriend(Context c, String name, String city, String state, String country){
 	    ContentValues myEntry = new ContentValues();
-	    myEntry.put(FriendTable.COLUMN_FRIEND, name);
-	    myEntry.put(FriendTable.COLUMN_CITY, city);
-	    myEntry.put(FriendTable.COLUMN_STATE, state);
-	    myEntry.put(FriendTable.COLUMN_COUNTRY, country);
+	    myEntry.put(FriendTable.COLUMN_FRIEND, "ME");
+	    myEntry.put(FriendTable.COLUMN_CITY, "San Francisco");
+	    myEntry.put(FriendTable.COLUMN_COUNTRY, "");
 	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 	 
 	    friendUri = c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
@@ -65,32 +58,23 @@ public class FriendController {
 		return null;
 	}
 	
-	public Cursor getFriends(Context c) {
-			
+	public Cursor getFriends() {
+		
+		//check for update, then asynctask
+		//return cursor for fragment to use
+		
 		Uri friendsUri = FriendContentProvider.CONTENT_URI;
+		//An array specifying which columns to return
+		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
 		
-		Cursor cur = c.getContentResolver().query(friendsUri, null, null, null, null);
-		
-		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
-		
-		String uTime;
-		
-		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-			uTime = cur.getString(dateCol);
-			if (!UpdateOk(today, uTime)) {
-				//need to async!!! 
-				updateFriendWeather(cur.getString(idCol));
-			}
-		}
+		Cursor cur = this.query(friendsUri, 
+				projection, 
+				null,
+				null,
+				null);
 		
 		return cur;
 	}
-	
-	private void updateFriendWeather(String id) {
-		
-	}
-	/*
 	
 	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener
     {
@@ -109,7 +93,6 @@ public class FriendController {
 		}
     }
 	
-	*/
 	private boolean UpdateOk(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
 		int uYear = Integer.parseInt(uT.substring(0,4));

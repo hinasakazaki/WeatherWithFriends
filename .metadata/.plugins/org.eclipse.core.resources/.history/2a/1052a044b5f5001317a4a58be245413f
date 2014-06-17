@@ -50,16 +50,14 @@ public class SocialFragment extends Fragment{
 	private void fillData(View v) {
 		
 		FriendController fc = new FriendController();
-		Cursor cur = fc.getFriends(v.getContext());
+		Cursor cur = fc.getFriends();
 		
-		/*
 		cur.registerContentObserver(FriendContentProvider.CONTENT_URI, true, mObserver = new ContentObserver(null) {
 			@Override
 			public void onChange(boolean self) {
 				mRequiresReload = true;
 			}
 		}
-		*/
 		
 		ListView list = (ListView) v.findViewById(R.id.list);
 		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT };
