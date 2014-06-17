@@ -52,8 +52,11 @@ public class SocialFragment extends Fragment{
 		
 		FriendController fc = new FriendController();
 		Cursor cur = fc.getFriends(v.getContext());
+		Handler handler = new Handler();
+		//ContentObserver mObserver = new ContentObserver(handler);
 		MyContentObserver mObserver = new MyContentObserver(new Handler());
 		cur.registerContentObserver(mObserver);
+		
 		
 		//v.getContext().getContentResolver().registerContentObserver(friendUri, true, myObserver)
 		
@@ -88,8 +91,7 @@ public class SocialFragment extends Fragment{
 
 		public void onChange(boolean selfChange) {  
 			super.onChange(selfChange);  
-			//refill? 
-			Log.v("Saw change", "refresh!?");
+			Log.d(TAG, "Saw a change in row # 1");  
 		}  
 	}  
 

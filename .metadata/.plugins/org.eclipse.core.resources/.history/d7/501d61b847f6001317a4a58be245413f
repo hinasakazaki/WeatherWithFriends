@@ -88,8 +88,7 @@ public class SocialFragment extends Fragment{
 
 		public void onChange(boolean selfChange) {  
 			super.onChange(selfChange);  
-			//refill? 
-			Log.v("Saw change", "refresh!?");
+			Log.d(TAG, "Saw a change in row # 1");  
 		}  
 	}  
 

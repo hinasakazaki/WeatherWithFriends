@@ -81,7 +81,6 @@ public class FriendController {
 			FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol), null);
 			ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
 		}
-		
 		return cur;
 	}
 	

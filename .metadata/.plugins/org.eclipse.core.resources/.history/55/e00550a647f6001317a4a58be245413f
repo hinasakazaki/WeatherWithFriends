@@ -12,7 +12,6 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,10 +51,14 @@ public class SocialFragment extends Fragment{
 		
 		FriendController fc = new FriendController();
 		Cursor cur = fc.getFriends(v.getContext());
-		MyContentObserver mObserver = new MyContentObserver(new Handler());
-		cur.registerContentObserver(mObserver);
 		
-		//v.getContext().getContentResolver().registerContentObserver(friendUri, true, myObserver)
+		
+		cur.registerContentObserver(FriendContentProvider.CONTENT_URI, true, mObserver = new ContentObserver(null) {
+			@Override
+			public void onChange(boolean self) {
+				mRequiresReload = true;
+			}
+		}
 		
 		
 		ListView list = (ListView) v.findViewById(R.id.list);
@@ -77,22 +80,7 @@ public class SocialFragment extends Fragment{
 		
 	}
 	
-	private class MyContentObserver extends ContentObserver {  
-		MyContentObserver(Handler handler) {  
-			super(handler);  
-		}  
-
-		public boolean deliverSelfNotifications() {  
-			return true;  
-		}  
-
-		public void onChange(boolean selfChange) {  
-			super.onChange(selfChange);  
-			//refill? 
-			Log.v("Saw change", "refresh!?");
-		}  
-	}  
-
+	
 	/*Deleting functionality on press */
 	
 	private void DeleteItem(View v, int position, long id){

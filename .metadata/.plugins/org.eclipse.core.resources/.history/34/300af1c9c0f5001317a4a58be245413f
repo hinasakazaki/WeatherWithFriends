@@ -51,8 +51,7 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 	}
 	
 	protected void onPostExecute() {
-		FriendController fc = new FriendController();
-		fc.UpdateFriendWeather(id, mContext, rsa);
+		listener.onTaskComplete(rsa);
 	}
 
 

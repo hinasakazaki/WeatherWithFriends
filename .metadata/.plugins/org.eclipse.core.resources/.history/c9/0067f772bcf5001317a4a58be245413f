@@ -61,28 +61,8 @@ public class FriendController {
 		fcp.delete(uri, null, null);
 	}
 	
-	public Cursor getSelf(Context c) {
-		Uri friendsUri = FriendContentProvider.CONTENT_URI;
-		
-		Cursor cur = c.getContentResolver().query(friendsUri, null, null, null, null);
-		
-		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
-		int cityCol = cur.getColumnIndex(FriendTable.COLUMN_CITY);
-		int stateCol = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int countryCol = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
-		String uTime;
-		
-		cur.moveToFirst();
-		
-		uTime = cur.getString(dateCol);
-		
-		if (!UpdateOk(today, uTime)) {
-			FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol), null);
-			ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
-		}
-		
-		return cur;
+	public Cursor getSelf() {
+		return null;
 	}
 	
 	public Cursor getFriends(Context c) {
@@ -93,35 +73,43 @@ public class FriendController {
 		
 		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
 		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
-		int cityCol = cur.getColumnIndex(FriendTable.COLUMN_CITY);
-		int stateCol = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int countryCol = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
+		
 		String uTime;
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
 			uTime = cur.getString(dateCol);
 			if (!UpdateOk(today, uTime)) {
 				//need to async!!! 
-				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol), null);
-				ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
+				updateFriendWeather(cur.getString(idCol));
 			}
 		}
 		return cur;
 	}
 	
-	public void UpdateFriendWeather(long id, Context c, String[] result) {
-		ContentValues myEntry = new ContentValues();
+	private void updateFriendWeather(String id) {	
+		FindFriendWeather ffw = new FindFriendWeather(null, null);
 		
-		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
-		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
-		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-		myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); 	
-		
-		Uri uri = Uri.parse(friendUri + "/friend" + id);
-		
-		c.getContentResolver().update(uri, myEntry, null, null);
 	}
+	/*
+	
+	public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener
+    {
 
+		@Override
+		public void onTaskComplete(String[] result) {
+
+			myEntry.put(FriendTable.COLUMN_TIME, result[0]);
+			myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
+			myEntry.put(FriendTable.COLUMN_TXT, result[2]);
+			myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); 
+			//{today.toString(), temperature, txt_forecast, iconurl}
+
+			getContentResolver().update(todoUri, myEntry, null, null)
+			
+		}
+    }
+	
+	*/
 	private boolean UpdateOk(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
 		int uYear = Integer.parseInt(uT.substring(0,4));
