@@ -27,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,31 +75,12 @@ public class HomeFragment extends Fragment{
 		else {
 			Log.d("Couldn't find current location", loc.toString());
 		}
-		
-		
-        
-		
-		/* 
-        //Cursor shit
-    	Uri friendsUri = FriendContentProvider.CONTENT_URI;
-		//An array specifying which columns to return
-		String[] projection = new String[]{FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_STATE, FriendTable.COLUMN_COUNTRY};
-		
-        Cursor cur = getActivity().getContentResolver().query(friendsUri, 
-				projection, 
-				null,
-				null,
-				null);
-        cur.moveToFirst();
-        
-		
-		
-		*/
-		
 	
 		FriendController fc = new FriendController();
-		Cursor cur = fc.getFriends(activity);
+		Cursor cur = fc.getSelf(activity);
 		cur.moveToFirst();
+		MyContentObserver mObserver = new MyContentObserver(new Handler());
+		cur.registerContentObserver(mObserver);
 		
 		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
 		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
@@ -126,9 +109,22 @@ public class HomeFragment extends Fragment{
 		} else {
 			fc.addSelf(activity, "San Francisco", "CA", null);
 		}
-	
-       
 	}
+	private class MyContentObserver extends ContentObserver {  
+		MyContentObserver(Handler handler) {  
+			super(handler);  
+		}  
+
+		public boolean deliverSelfNotifications() {  
+			return true;  
+		}  
+
+		public void onChange(boolean selfChange) {  
+			super.onChange(selfChange);  
+			//refill? 
+			Log.v("Saw change", "refresh!?");
+		}  
+	}  
 	
 
 }
