@@ -73,21 +73,25 @@ public class FriendController {
 		
 		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
 		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
-		
+		int cityCol = cur.getColumnIndex(FriendTable.COLUMN_CITY);
+		int stateCol = cur.getColumnIndex(FriendTable.COLUMN_STATE);
+		int countryCol = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
 		String uTime;
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
 			uTime = cur.getString(dateCol);
 			if (!UpdateOk(today, uTime)) {
 				//need to async!!! 
-				updateFriendWeather(cur.getString(idCol));
+				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol), null);
+				ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));
+				
+				c.getContentResolver().update(friendUri + "/friend" + cur.getString(idCol), values, null, null);
 			}
 		}
-		
 		return cur;
 	}
 	
-	private void updateFriendWeather(String id) {
+	public void UpdateFriendWeather() {
 		
 	}
 	/*

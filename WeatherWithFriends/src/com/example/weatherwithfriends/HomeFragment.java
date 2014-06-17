@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment{
 		
 	
 		FriendController fc = new FriendController();
-		Cursor cur = fc.getFriends();
+		Cursor cur = fc.getFriends(activity);
 		cur.moveToFirst();
 		
 		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
