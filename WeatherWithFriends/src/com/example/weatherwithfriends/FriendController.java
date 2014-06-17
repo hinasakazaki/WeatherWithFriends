@@ -61,6 +61,8 @@ public class FriendController {
 	}
 	
 	public Cursor getSelf(Context c) {
+		
+		Log.v("At getSelf", "good!");
 		Uri friendsUri = FriendContentProvider.CONTENT_URI;
 		
 		Cursor cur = c.getContentResolver().query(friendsUri, null, null, null, null);
@@ -77,6 +79,7 @@ public class FriendController {
 		uTime = cur.getString(dateCol);
 		
 		if (!UpdateOk(today, uTime)) {
+			Log.v("The time that needs to be updated", uTime);
 			FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
 			ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
 		}
@@ -118,7 +121,7 @@ public class FriendController {
 		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
 		myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); 	
 		
-		Uri uri = Uri.parse(friendUri + "/friend" + id);
+		Uri uri = Uri.parse(FriendContentProvider.CONTENT_URI + "/" + id);
 		
 		c.getContentResolver().update(uri, myEntry, null, null);
 	}
@@ -134,28 +137,31 @@ public class FriendController {
 		if (uYear == t.year && uMonth == t.month && uDate == t.monthDay) {
 			if (uHour == t.hour) {
 				//same hour
-				if (t.minute - uMinute > 15) {
-					Log.v("Needs to be updated!", ""+(t.minute-uMinute));
+				if (t.minute - uMinute < 15) {
 					return true;
 				}
 				else {
+					Log.v("Needs to be updated!", ""+(t.minute-uMinute));
 					return false;
 				}
 			}
 			else if (t.hour > uHour) {
 				//difference between hours
 				if (((60-uMinute) + (t.minute)) <= 15) {
-					Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
+					
 					return true;
 				}
 				else {
+					Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
 					return false;
 				}
 			}
 			else {
+				Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
 				return false;
 			}
 		}
+		Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
 		return false;
 	}
 	
