@@ -126,6 +126,7 @@ public class FriendController {
 		c.getContentResolver().update(uri, myEntry, null, null);
 	}
 
+	
 	private boolean UpdateOk(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
 		int uYear = Integer.parseInt(uT.substring(0,4));

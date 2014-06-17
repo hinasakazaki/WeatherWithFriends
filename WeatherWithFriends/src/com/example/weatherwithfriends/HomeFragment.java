@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
@@ -31,12 +32,62 @@ public class HomeFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.home_fragment, container, false);
+		
+
+		FriendController fc = new FriendController();
+		fc.addSelf(rootView.getContext(), "San Francisco", "CA", "");
+	
+		Cursor cur = fc.getSelf(rootView.getContext());
+		cur.moveToFirst();
+		MyContentObserver mObserver = new MyContentObserver(new Handler());
+		cur.registerContentObserver(mObserver);
+		
+		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
+		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
+		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
+		int tempColumn = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
+		int txtColumn = cur.getColumnIndex(FriendTable.COLUMN_TXT);
+		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
+		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
+		
+		//UI stuff -- that's ok.
+		TextView loc = (TextView)rootView.findViewById(R.id.location);
+		TextView tv = (TextView)rootView.findViewById(R.id.temperature);
+		TextView dv = (TextView)rootView.findViewById(R.id.description);
+		ImageView iv = (ImageView)rootView.findViewById(R.id.icon);
+		
+		//load from table, update
+		
+		String name = cur.getString(nameColumn);
+		String city = cur.getString(cityColumn);
+		String state = cur.getString(stateColumn);
+		String temp = cur.getString(tempColumn);
+		String txtForecast = cur.getString(txtColumn);
+		Bitmap icon = BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length);
+		
+		if (name.equals("ME")) {
+			//UIs
+			loc.setText(city + ", " + state);
+
+			tv.setText(temp);
+			
+			dv.setText(txtForecast);
+
+			//image view -- where to construct
+			iv.setImageBitmap(icon); 
+
+			 
+		} else {
+			fc.addSelf(rootView.getContext(), "San Francisco", "CA", null);
+		}
+		
 		return rootView;
 	}
 	
 	@Override
 	public void onAttach (Activity activity) {
 		super.onAttach(activity);
+		
 		
 		//let's figure out where I am!
 		loc = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -50,41 +101,6 @@ public class HomeFragment extends Fragment{
 			Log.d("Couldn't find current location", loc.toString());
 		}
 	
-		FriendController fc = new FriendController();
-		fc.addSelf(activity, "San Francisco", "CA", "");
-	
-		Cursor cur = fc.getSelf(activity);
-		cur.moveToFirst();
-		MyContentObserver mObserver = new MyContentObserver(new Handler());
-		cur.registerContentObserver(mObserver);
-		
-		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
-		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
-		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int tempColumn = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
-		int txtColumn = cur.getColumnIndex(FriendTable.COLUMN_TXT);
-		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
-		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-		
-		
-		//load from table, update
-		if (cur.getString(nameColumn) == "ME") {
-			//UIs
-			//image view -- where to construct?
-			 ImageView iv = (ImageView) getView().findViewById(R.id.icon);
-			 iv.setImageBitmap(BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length)); 
-		
-			 TextView loc = (TextView)getView().findViewById(R.id.location);
-			 loc.setText(cur.getString(cityColumn) + ", " + cur.getString(stateColumn));
-		
-			 TextView tv = (TextView)getView().findViewById(R.id.temperature);
-			 tv.setText(cur.getString(tempColumn));
-		
-			 TextView dv = (TextView)getView().findViewById(R.id.description);
-			 dv.setText(cur.getString(txtColumn));
-		} else {
-			fc.addSelf(activity, "San Francisco", "CA", null);
-		}
 	}
 	private class MyContentObserver extends ContentObserver {  
 		MyContentObserver(Handler handler) {  

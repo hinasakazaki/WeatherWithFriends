@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.text.format.Time;
+import android.util.Log;
 
 
 public class FriendContentProvider extends ContentProvider {
@@ -117,6 +118,9 @@ public class FriendContentProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		//Log.v("ERHIGDS:FLKJD", uri.toString());
+		//this is correct Uri, but... :(((
+		
 		int uriType = sURIMatcher.match(uri);
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsDeleted = 0;
