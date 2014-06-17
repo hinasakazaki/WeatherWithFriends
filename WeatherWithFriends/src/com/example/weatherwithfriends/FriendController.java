@@ -98,11 +98,12 @@ public class FriendController {
 		int cityCol = cur.getColumnIndex(FriendTable.COLUMN_CITY);
 		int stateCol = cur.getColumnIndex(FriendTable.COLUMN_STATE);
 		int countryCol = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
+		int tempCol = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
 		String uTime;
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
 			uTime = cur.getString(dateCol);
-			if (!UpdateOk(today, uTime)) {
+			if (!UpdateOk(today, uTime) || (cur.getString(tempCol).length() < 1)) {
 				//need to async!!! 
 				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
 				ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
