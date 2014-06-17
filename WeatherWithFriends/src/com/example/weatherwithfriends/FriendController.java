@@ -112,6 +112,7 @@ public class FriendController {
 		//today.toString(), temperature, txt_forecast, iconurl
 		ContentValues myEntry = new ContentValues();
 		
+		Log.v("UpdateFreindWeather", "we're here!");
 		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
@@ -134,6 +135,7 @@ public class FriendController {
 			if (uHour == t.hour) {
 				//same hour
 				if (t.minute - uMinute > 15) {
+					Log.v("Needs to be updated!", ""+(t.minute-uMinute));
 					return true;
 				}
 				else {
@@ -143,6 +145,7 @@ public class FriendController {
 			else if (t.hour > uHour) {
 				//difference between hours
 				if (((60-uMinute) + (t.minute)) <= 15) {
+					Log.v("Needs to be updated!", ""+((60-uMinute) + (t.minute)));
 					return true;
 				}
 				else {

@@ -40,15 +40,14 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 	@Override
 	protected String[] doInBackground(String... params) {
 		rsa = HTTPRequest(params);
+
+		Log.v("On post execute", rsa.toString());
+		FriendController.UpdateFriendWeather(id, mContext, rsa);
 		return HTTPRequest(params);
 	}
 	
 	protected void onPostExecute() {
-		FriendController.UpdateFriendWeather(id, mContext, rsa);
 	}
-
-
-	
 	
 	private String[] HTTPRequest(String[] location) {
 		final String API_KEY = "86d6e9e9fcdda77c";
@@ -116,6 +115,8 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 		String location = null;
 		String temperature = null;
 		Uri friendsUri = FriendContentProvider.CONTENT_URI;
+		
+		Log.v("got to parse JSON!", "good");
 		
 		
 		if (rString != null) {
