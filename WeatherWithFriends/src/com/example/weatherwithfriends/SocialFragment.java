@@ -2,6 +2,7 @@ package com.example.weatherwithfriends;
 
 import java.util.ArrayList;
 
+import com.example.weatherwithfriends.adapter.ImageCursorAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 
@@ -10,6 +11,7 @@ import android.widget.SimpleCursorAdapter;
 import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +30,7 @@ import android.widget.Toast;
 
 public class SocialFragment extends Fragment{
 	
-	private SimpleCursorAdapter adapter;
+	private ImageCursorAdapter adapter;
 	ListView list;
 	
 	@Override
@@ -59,11 +61,13 @@ public class SocialFragment extends Fragment{
 		
 		
 		ListView list = (ListView) v.findViewById(R.id.list);
-		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT };
+		
+		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT, FriendTable.COLUMN_TEMP };
 		
 		int[] to = new int[] {R.id.friend_name, R.id.friend_location, R.id.friend_temp};
-		adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to, 0);
-			
+		
+		adapter = new ImageCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to);
+		
 		list.setAdapter(adapter);
 		
 		list.setOnItemClickListener(new OnItemClickListener() {
