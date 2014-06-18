@@ -16,12 +16,14 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
+import com.example.weatherwithfriends.friends.database.FriendsDatabaseHelper;
 import com.example.weatherwithfriends.me.MeContentProvider;
 import com.example.weatherwithfriends.me.MeTable;
 
@@ -55,9 +57,11 @@ public class FriendController {
 	
 	public void deleteFriend(View v, Long id) {
 		//View parent = (View) v.getParent();
-		Uri uri = Uri.parse(FriendContentProvider.CONTENT_URI + "/" + id);
+		/*
 		FriendContentProvider fcp = new FriendContentProvider();
-		fcp.delete(uri, null, null);
+		fcp.delete(FriendContentProvider.CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
+		*/
+		v.getContext().getContentResolver().delete(FriendContentProvider.CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
 	}
 	
 	public Cursor getSelf(Context c) {
@@ -125,7 +129,7 @@ public class FriendController {
 		return cur;
 	}
 	
-	public static void UpdateFriendWeather(long id, Context c, String[] result) {
+	public static void UpdateFriendWeather(long id, Context c, String[] result, byte[] image) {
 		//today.toString(), temperature, txt_forecast, iconurl
 		ContentValues myEntry = new ContentValues();
 		
@@ -133,21 +137,21 @@ public class FriendController {
 		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-		myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); 	
+		myEntry.put(FriendTable.COLUMN_ICON, image); 		
 		
 		Uri uri = Uri.parse(FriendContentProvider.CONTENT_URI + "/" + id);
 		
 		c.getContentResolver().update(uri, myEntry, null, null);
 	}
 
-	public static void UpdateMyWeather(long id, Context mContext, String[] result){
+	public static void UpdateMyWeather(long id, Context mContext, String[] result, byte[] image){
 		ContentValues myEntry = new ContentValues();
 		
 		Log.v("UpdateMyWeather!", "MWAHAHAH");
 		myEntry.put(MeTable.COLUMN_TIME, result[0]);
 		myEntry.put(MeTable.COLUMN_TEMP, result[1]);
 		myEntry.put(MeTable.COLUMN_TXT, result[2]);
-		myEntry.put(FriendTable.COLUMN_ICON, getImage(result[3])); 	
+		myEntry.put(FriendTable.COLUMN_ICON, image); 	
 		myEntry.put(MeTable.COLUMN_LOCATION, result[4]);
 		
 		Uri uri = Uri.parse(MeContentProvider.CONTENT_URI + "/" + id);
@@ -199,34 +203,5 @@ public class FriendController {
 		return true;
 	}
 	
-	private static byte[] getImage(String iconurl) {
-		//get image stuff
-		URL iUrl = null;
-		try {
-			iUrl = new URL(iconurl);
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			URLConnection ucon = iUrl.openConnection();
-			
-			InputStream is = ucon.getInputStream();BufferedInputStream bis = new BufferedInputStream(is);
-			
-			ByteArrayBuffer baf = new ByteArrayBuffer(500);
-			int current = 0;
-			
-			while((current = bis.read()) != -1) {
-				baf.append((byte) current);
-			}
-			
-			return baf.toByteArray();
-		} catch (Exception e) {
-			Log.d("ImageManager", "Error" +e.toString());
-		}
-
-		return null;
-
-	}
+	
 }

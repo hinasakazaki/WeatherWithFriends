@@ -52,8 +52,8 @@ public class FriendContentProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		Log.v("onCreate?", "blah");
 		database = new FriendsDatabaseHelper(getContext());
+		Log.v("FriendController made", "database shouldn't be null");
 		return false;
 	}
 
@@ -121,7 +121,6 @@ public class FriendContentProvider extends ContentProvider {
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		//Log.v("ERHIGDS:FLKJD", uri.toString());
 		//this is correct Uri, but... :(((
-		
 		int uriType = sURIMatcher.match(uri);
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsDeleted = 0;

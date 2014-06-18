@@ -1,7 +1,12 @@
 package com.example.weatherwithfriends;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -10,10 +15,12 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.example.weatherwithfriends.FindWeather.getImageAsyncTask;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 
 import android.content.ContentValues;
@@ -45,7 +52,8 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	
 	protected void onPostExecute(String[] result) {
 		Log.v("On friend post execute for friend", result.toString());
-		FriendController.UpdateFriendWeather(id, mContext, result);
+		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
+		task.execute(result);
 	}
 	
 	private String[] HTTPRequest(String[] location) {
@@ -141,5 +149,62 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		
 		return returnSA;
 	}
+	
+	class getImageAsyncTask extends AsyncTask<String, Void, byte[]> {
+		Context mContext;
+		Long id;
+		String[] responseString;
+		
+		public getImageAsyncTask (Long id, Context c) {
+			mContext = c;
+			this.id = id;
+		}
+		@Override
+		protected byte[] doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			responseString = params;
+			return getImage(params[3]);
+		}
+		
+		protected void onPostExecute(byte[] result) {
+			Log.v("On image post execute", result.toString());
+			FriendController.UpdateFriendWeather(id, mContext, responseString, result);
+		}
+		
+	}
+	private static byte[] getImage(String iconurl) {
+		//get image stuff
+		URL iUrl = null;
+		try {
+			iUrl = new URL(iconurl);
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			URLConnection ucon = iUrl.openConnection();
+			
+			InputStream is = ucon.getInputStream();
+			
+			BufferedInputStream bis = new BufferedInputStream(is);
+			
+			ByteArrayBuffer baf = new ByteArrayBuffer(500);
+			
+			int current = 0;
+			
+			while((current = bis.read()) != -1) {
+				baf.append((byte) current);
+			}
+			
+			return baf.toByteArray();
+		} catch (Exception e) { //image manager error
+			Log.d("ImageManager", "Error" +e.toString());
+		}
+
+		return null;
+
+	}
+	
 	
 }

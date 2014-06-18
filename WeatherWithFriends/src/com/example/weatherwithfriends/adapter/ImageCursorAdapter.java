@@ -54,7 +54,7 @@ public class ImageCursorAdapter extends SimpleCursorAdapter{
 	       
 	       byte[] wicon = this.c.getBlob(this.c.getColumnIndex(FriendTable.COLUMN_ICON));
 	       if (wicon != null) {
-		   ImageView iv = (ImageView) v.findViewById(R.id.friend_weather_icon);
+	    	   ImageView iv = (ImageView) v.findViewById(R.id.friend_weather_icon);
 	           iv.setImageBitmap(BitmapFactory.decodeByteArray(wicon, 0, wicon.length));
 	       }
 	       
