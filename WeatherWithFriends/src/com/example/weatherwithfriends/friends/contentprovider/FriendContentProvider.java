@@ -52,6 +52,7 @@ public class FriendContentProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
+		Log.v("onCreate?", "blah");
 		database = new FriendsDatabaseHelper(getContext());
 		return false;
 	}

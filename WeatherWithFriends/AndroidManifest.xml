@@ -34,6 +34,11 @@
         <provider
 		    android:name=".friends.contentprovider.FriendContentProvider"
 		    android:authorities="com.example.weatherwithfriends.friends.contentprovider" />
+        
+        <provider
+		    android:name=".me.MeContentProvider"
+		    android:authorities="com.example.weatherwithfriends.me" />
+        
     </application>
 
 </manifest>

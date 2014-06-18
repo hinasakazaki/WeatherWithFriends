@@ -5,7 +5,7 @@ import android.util.Log;
 
 public class FriendTable {
 	 // Database table
-	  public static final String TABLE_FRIENDS= "friend";
+	  public static final String TABLE_FRIENDS= "friends"; // dont knwoww agghh
 	  public static final String COLUMN_ID = "_id";
 	  public static final String COLUMN_FRIEND = "friend";
 	  public static final String COLUMN_CITY = "city";
@@ -23,6 +23,7 @@ public class FriendTable {
 		.append(" text, ").append(COLUMN_STATE).append(" text, ").append(COLUMN_COUNTRY).
 		append(" text, ").append(COLUMN_TEMP).append(" text, ").append(COLUMN_TXT).append(" text, ").append(COLUMN_ICON)
 		.append(" text, ").append(COLUMN_TIME).append(" text not null").append(");");
+		Log.v("blah", sb.toString());
 	    database.execSQL(sb.toString());
 	  }
 

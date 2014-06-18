@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MeDatabaseHelper extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "friendslist.db";
+	private static final String DATABASE_NAME = "me.db";
 	private static final int DATABASE_VERSION = 1;
 
 	public MeDatabaseHelper(Context context) {

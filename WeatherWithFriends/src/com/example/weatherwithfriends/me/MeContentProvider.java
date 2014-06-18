@@ -20,12 +20,12 @@ public class MeContentProvider extends ContentProvider {
 	private MeDatabaseHelper database;
 
 	// used for the UriMacher
-	private static final int FRIENDS = 10;
-	private static final int FRIEND_ID = 20;
+	private static final int ME = 10;
+	private static final int ME_ID = 20;
 
-	private static final String AUTHORITY = "com.example.weatherwithfriends.friends.contentprovider";
+	private static final String AUTHORITY = "com.example.weatherwithfriends.me";
 
-	private static final String BASE_PATH = "friends";
+	private static final String BASE_PATH = "me";
 
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
 			+ "/" + BASE_PATH);
@@ -40,8 +40,8 @@ public class MeContentProvider extends ContentProvider {
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	static {
-		sURIMatcher.addURI(AUTHORITY, BASE_PATH, FRIENDS);
-		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", FRIEND_ID);
+		sURIMatcher.addURI(AUTHORITY, BASE_PATH, ME);
+		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", ME_ID);
 	}
 
 	@Override
@@ -65,9 +65,9 @@ public class MeContentProvider extends ContentProvider {
 
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
-			case FRIENDS:
+			case ME:
 				break;
-			case FRIEND_ID:
+			case ME_ID:
 				// adding the ID to the original query
 				queryBuilder.appendWhere(MeTable.COLUMN_ID + "="
 						+ uri.getLastPathSegment());
@@ -99,7 +99,7 @@ public class MeContentProvider extends ContentProvider {
 		
 		long id = 0;
 		switch (uriType) {
-			case FRIENDS:
+			case ME:
 				id = sqlDB.insert(MeTable.TABLE_ME, null, values);
 				break;
 			default:
@@ -119,13 +119,13 @@ public class MeContentProvider extends ContentProvider {
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsUpdated = 0;
 		switch (uriType) {
-		case FRIENDS:
+		case ME:
 			rowsUpdated = sqlDB.update(MeTable.TABLE_ME, 
 					values, 
 					selection,
 					selectionArgs);
 			break;
-		case FRIEND_ID:
+		case ME_ID:
 			String id = uri.getLastPathSegment();
 			if (TextUtils.isEmpty(selection)) {
 				rowsUpdated = sqlDB.update(MeTable.TABLE_ME, 

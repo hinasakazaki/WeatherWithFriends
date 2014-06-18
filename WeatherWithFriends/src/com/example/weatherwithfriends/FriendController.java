@@ -37,9 +37,9 @@ public class FriendController {
 	
 	
 	public void addSelf (Context c, Location loc) {
-		String i = ""+ 0;
+		String i = ""+ 1;
 		FindWeather fw = new FindWeather(c, i);
-		 fw.execute(loc);
+		fw.execute(loc);
 	}
 	
 	public void addFriend(Context c, String name, String city, String state, String country){
@@ -66,14 +66,17 @@ public class FriendController {
 		String provider;
 		
 		Log.v("At getSelf", "good!");
+		
 		Uri meUri = MeContentProvider.CONTENT_URI;
 		
 		Cursor cur = c.getContentResolver().query(meUri, null, null, null, null);
 		
+		/*
 		int dateCol = cur.getColumnIndex(MeTable.COLUMN_TIME);
 		int idCol = cur.getColumnIndex(MeTable.COLUMN_ID);
 		int locCol = cur.getColumnIndex(MeTable.COLUMN_LOCATION);
 		String uTime;
+		*/
 		
 		if (!cur.moveToFirst()) {
 			//deal
@@ -96,6 +99,7 @@ public class FriendController {
 			
 		Uri friendsUri = FriendContentProvider.CONTENT_URI;
 		
+		//throws error
 		Cursor cur = c.getContentResolver().query(friendsUri, null, null, null, null);
 		
 		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);

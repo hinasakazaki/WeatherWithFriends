@@ -40,13 +40,15 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 	@Override
 	protected String[] doInBackground(String... params) {
 		rsa = HTTPRequest(params);
-
-		Log.v("On post execute", rsa.toString());
-		FriendController.UpdateFriendWeather(id, mContext, rsa);
 		return HTTPRequest(params);
+
+		
 	}
 	
 	protected void onPostExecute() {
+		Log.v("On post execute", rsa.toString());
+		FriendController.UpdateFriendWeather(id, mContext, rsa);
+	
 	}
 	
 	private String[] HTTPRequest(String[] location) {

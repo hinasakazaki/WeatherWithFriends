@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import com.example.weatherwithfriends.adapter.ImageCursorAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
+import com.example.weatherwithfriends.me.MeContentProvider;
 
 import android.support.v4.app.Fragment;
 import android.widget.SimpleCursorAdapter;
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -28,17 +33,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SocialFragment extends Fragment{
+public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	
 	private ImageCursorAdapter adapter;
 	ListView list;
+	View rootView;
+	android.support.v4.app.LoaderManager loadermanager;
+	CursorLoader cursorLoader;
+	
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.social_fragment, container, false);
+		rootView = inflater.inflate(R.layout.social_fragment, container, false);
  	
-		fillData(rootView);
+		list = (ListView) rootView.findViewById(R.id.list);
+		
+		loadermanager = getLoaderManager();
+		
+		loadermanager.initLoader(1, null, rootView.getContext());
 		
         return rootView;
     }
@@ -50,23 +63,28 @@ public class SocialFragment extends Fragment{
 	}
 	
 	
-	private void fillData(View v) {
+	private void fillData(Cursor cur) {
 		
+		/*
 		FriendController fc = new FriendController();
 		Cursor cur = fc.getFriends(v.getContext());
+		*/
 		
 		if (!cur.moveToFirst()) {
-			TextView tv = (TextView) v.findViewById(R.id.add_friends);
+			TextView tv = (TextView) rootView.findViewById(R.id.add_friends);
 		 	tv.setText("It's lonely in here... Add some friends!");
 		}
 		
-		MyContentObserver mObserver = new MyContentObserver(new Handler());
+		/*
+		MyContentObserver mObserver = new MyContentObserver(new Handler(), rootView);
 		cur.registerContentObserver(mObserver);
+		*/
 		
 		//v.getContext().getContentResolver().registerContentObserver(friendUri, true, myObserver)
+	
+
 		
 		
-		ListView list = (ListView) v.findViewById(R.id.list);
 		
 		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT, FriendTable.COLUMN_TEMP };
 		
@@ -86,10 +104,13 @@ public class SocialFragment extends Fragment{
 		});
 		
 	}
-	
-	private class MyContentObserver extends ContentObserver {  
-		MyContentObserver(Handler handler) {  
+/*	
+	private class MyContentObserver extends ContentObserver {
+		private View view;
+		private Cursor cursor;
+		MyContentObserver(Handler handler, View view) {  
 			super(handler);  
+			this.view = view;
 		}  
 
 		public boolean deliverSelfNotifications() {  
@@ -100,8 +121,10 @@ public class SocialFragment extends Fragment{
 			super.onChange(selfChange);  
 			//refill? 
 			Log.v("Saw change", "refresh!?");
+			fillData(view);
 		}  
 	}  
+	*/
 
 	/*Deleting functionality on press */
 	
@@ -193,6 +216,25 @@ public class SocialFragment extends Fragment{
 		
 		no.setVisibility(View.GONE);
 	}
+	
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		Log.v("OnCreateLoader", "blah");
+		Uri CONTENT_URI = MeContentProvider.CONTENT_URI;
+		 return new CursorLoader(this.getActivity(), CONTENT_URI, null, null, null, null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		((android.support.v4.widget.SimpleCursorAdapter) list.getAdapter()).swapCursor(cursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		((android.support.v4.widget.SimpleCursorAdapter) list.getAdapter()).swapCursor(null);
+	}  
+	
+	
 	
 	
 	
