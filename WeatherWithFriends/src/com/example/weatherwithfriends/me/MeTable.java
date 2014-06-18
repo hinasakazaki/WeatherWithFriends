@@ -7,9 +7,7 @@ public class MeTable {
 	 // Database table
 	  public static final String TABLE_ME= "me";
 	  public static final String COLUMN_ID = "_id";
-	  public static final String COLUMN_CITY = "city";
-	  public static final String COLUMN_STATE = "state";
-	  public static final String COLUMN_COUNTRY = "country";
+	  public static final String COLUMN_LOCATION = "location";
 	  public static final String COLUMN_TEMP = "temp";
 	  public static final String COLUMN_TXT = "text";
 	  public static final String COLUMN_ICON = "icon";
@@ -18,10 +16,9 @@ public class MeTable {
 
 	  public static void onCreate(SQLiteDatabase database) {
 		StringBuilder sb = new StringBuilder("create table if not exists ").append(TABLE_ME).append("(").append(COLUMN_ID)
-		.append(" integer primary key autoincrement, ").append(COLUMN_CITY) 
-		.append(" text, ").append(COLUMN_STATE).append(" text, ").append(COLUMN_COUNTRY).
-		append(" text, ").append(COLUMN_TEMP).append(" text, ").append(COLUMN_TXT).append(" text, ").append(COLUMN_ICON)
-		.append(" text, ").append(COLUMN_TIME).append(" text not null").append(");");
+		.append(" integer primary key autoincrement, ").append(COLUMN_LOCATION) 
+		.append(" text, ").append(COLUMN_TEMP).append(" text, ").append(COLUMN_TXT).append(" text, ").append(COLUMN_ICON)
+		.append(" text, ").append(COLUMN_TIME).append(" text").append(");");
 	    database.execSQL(sb.toString());
 	  }
 

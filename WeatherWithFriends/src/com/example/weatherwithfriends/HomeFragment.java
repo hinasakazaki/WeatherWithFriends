@@ -2,6 +2,7 @@ package com.example.weatherwithfriends;
 
 
 import com.example.weatherwithfriends.friends.database.FriendTable;
+import com.example.weatherwithfriends.me.MeTable;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ public class HomeFragment extends Fragment{
 	Location here;
 	String provider;
 	LocationManager loc;
+	public static boolean loaded = false;
 
 	
 	@Override
@@ -33,52 +35,15 @@ public class HomeFragment extends Fragment{
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.home_fragment, container, false);
 		
-
 		FriendController fc = new FriendController();
-	
-		//check first time install
+		
 		Cursor cur = fc.getSelf(rootView.getContext());
-		cur.moveToFirst();
-		MyContentObserver mObserver = new MyContentObserver(new Handler());
-		cur.registerContentObserver(mObserver);
 		
-		int nameColumn = cur.getColumnIndex(FriendTable.COLUMN_FRIEND);
-		int cityColumn = cur.getColumnIndex(FriendTable.COLUMN_CITY);
-		int stateColumn = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int tempColumn = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
-		int txtColumn = cur.getColumnIndex(FriendTable.COLUMN_TXT);
-		int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
-		int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-		
-		
-		TextView loc = (TextView)rootView.findViewById(R.id.location);
-		TextView tv = (TextView)rootView.findViewById(R.id.temperature);
-		TextView dv = (TextView)rootView.findViewById(R.id.description);
-		ImageView iv = (ImageView)rootView.findViewById(R.id.icon);
-		
-		//load from table, update
-		
-		String name = cur.getString(nameColumn);
-		String city = cur.getString(cityColumn);
-		String state = cur.getString(stateColumn);
-		String temp = cur.getString(tempColumn);
-		String txtForecast = cur.getString(txtColumn);
-		Bitmap icon = BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length);
-		
-		if (name.equals("ME")) {
-			//UIs
-			loc.setText(city + ", " + state);
-
-			tv.setText(temp);
-			
-			dv.setText(txtForecast);
-
-			//image view -- where to construct
-			iv.setImageBitmap(icon);  
-		} else 
-		{
-			fc.addSelf(rootView.getContext(), "San Francisco", "CA", "");
+		if (cur.moveToFirst()) {
+			fillData(rootView, cur);
 		}
+		
+		
 		return rootView;
 	}
 	
@@ -86,23 +51,51 @@ public class HomeFragment extends Fragment{
 	public void onAttach (Activity activity) {
 		super.onAttach(activity);
 		
-		
-		//let's figure out where I am!
-		loc = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		
-		if (loc.getAllProviders().size() > 0) {
-			provider = loc.getAllProviders().get(0);
-			here = loc.getLastKnownLocation(provider);
-		}
-		
-		else {
-			Log.d("Couldn't find current location", loc.toString());
-		}
 	
 	}
-	private class MyContentObserver extends ContentObserver {  
-		MyContentObserver(Handler handler) {  
+	
+	private void fillData(View v, Cursor cur) {
+		
+		MyContentObserver mObserver = new MyContentObserver(new Handler(), v, cur);
+		cur.registerContentObserver(mObserver);
+		
+		int locColumn = cur.getColumnIndex(MeTable.COLUMN_LOCATION);
+		int tempColumn = cur.getColumnIndex(MeTable.COLUMN_TEMP);
+		int txtColumn = cur.getColumnIndex(MeTable.COLUMN_TXT);
+		int iconColumn = cur.getColumnIndex(MeTable.COLUMN_ICON);
+		int timeColumn = cur.getColumnIndex(MeTable.COLUMN_TIME);
+		
+		
+		TextView loc = (TextView)v.findViewById(R.id.location);
+		TextView tv = (TextView)v.findViewById(R.id.temperature);
+		TextView dv = (TextView)v.findViewById(R.id.description);
+		ImageView iv = (ImageView)v.findViewById(R.id.icon);
+		
+		//load from table, update
+		while (!loaded) {
+			String location = cur.getString(locColumn);
+			String temp = cur.getString(tempColumn);
+			String txtForecast = cur.getString(txtColumn);
+			Bitmap icon = BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length);
+				
+			loc.setText(location);
+	
+			tv.setText(temp);
+				
+			dv.setText(txtForecast);
+			
+			//image view -- where to construct
+			iv.setImageBitmap(icon); 
+			
+		}
+	}
+	private class MyContentObserver extends ContentObserver {
+		private View view;
+		private Cursor cursor;
+		MyContentObserver(Handler handler, View view, Cursor cursor) {  
 			super(handler);  
+			this.cursor = cursor;
+			this.view = view;
 		}  
 
 		public boolean deliverSelfNotifications() {  
@@ -113,8 +106,10 @@ public class HomeFragment extends Fragment{
 			super.onChange(selfChange);  
 			//refill? 
 			Log.v("Saw change", "refresh!?");
+			fillData(view, cursor);
 		}  
 	}  
+	
 	
 
 }

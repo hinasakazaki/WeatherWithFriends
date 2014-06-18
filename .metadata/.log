@@ -9627,3 +9627,19 @@ java.lang.NullPointerException
 
 !ENTRY org.eclipse.ui 4 4 2014-06-17 15:00:25.412
 !MESSAGE Could not retrieve EHandlerService or ICommandService from context evaluation context fororg.eclipse.wst.xml.ui.reload.dependencies
+
+!ENTRY org.eclipse.jdt.debug 4 125 2014-06-17 21:04:35.436
+!MESSAGE Internal error logged from JDI Debug: 
+!STACK 1
+org.eclipse.debug.core.DebugException: VM does not support access watchpoints.
+	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaWatchpoint.notSupported(JavaWatchpoint.java:195)
+	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaWatchpoint.createRequest(JavaWatchpoint.java:163)
+	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaBreakpoint.handleClassPrepareEvent(JavaBreakpoint.java:374)
+	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaBreakpoint.handleEvent(JavaBreakpoint.java:290)
+	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaWatchpoint.handleEvent(JavaWatchpoint.java:475)
+	at org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch(EventDispatcher.java:152)
+	at org.eclipse.jdt.internal.debug.core.EventDispatcher.access$0(EventDispatcher.java:100)
+	at org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run(EventDispatcher.java:249)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)
+!SUBENTRY 1 org.eclipse.debug.core 4 5011 2014-06-17 21:04:35.437
+!MESSAGE VM does not support access watchpoints.

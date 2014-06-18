@@ -3,10 +3,6 @@ package com.example.weatherwithfriends.me;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import com.example.weatherwithfriends.FindFriendWeather;
-import com.example.weatherwithfriends.friends.database.FriendTable;
-import com.example.weatherwithfriends.friends.database.FriendsDatabaseHelper;
-
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -16,14 +12,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.text.format.Time;
-import android.util.Log;
 
 
 public class MeContentProvider extends ContentProvider {
 
 	// database
-	private FriendsDatabaseHelper database;
+	private MeDatabaseHelper database;
 
 	// used for the UriMacher
 	private static final int FRIENDS = 10;
@@ -52,7 +46,7 @@ public class MeContentProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		database = new FriendsDatabaseHelper(getContext());
+		database = new MeDatabaseHelper(getContext());
 		return false;
 	}
 
@@ -67,7 +61,7 @@ public class MeContentProvider extends ContentProvider {
 		checkColumns(projection);
 
 		// Set the table
-		queryBuilder.setTables(FriendTable.TABLE_FRIENDS);
+		queryBuilder.setTables( MeTable.TABLE_ME);
 
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
@@ -75,7 +69,7 @@ public class MeContentProvider extends ContentProvider {
 				break;
 			case FRIEND_ID:
 				// adding the ID to the original query
-				queryBuilder.appendWhere(FriendTable.COLUMN_ID + "="
+				queryBuilder.appendWhere(MeTable.COLUMN_ID + "="
 						+ uri.getLastPathSegment());
 				break;
 			default:
@@ -106,7 +100,7 @@ public class MeContentProvider extends ContentProvider {
 		long id = 0;
 		switch (uriType) {
 			case FRIENDS:
-				id = sqlDB.insert(FriendTable.TABLE_FRIENDS, null, values);
+				id = sqlDB.insert(MeTable.TABLE_ME, null, values);
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -116,38 +110,6 @@ public class MeContentProvider extends ContentProvider {
 		return Uri.parse(BASE_PATH + "/" + id);
 	}
 
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		//Log.v("ERHIGDS:FLKJD", uri.toString());
-		//this is correct Uri, but... :(((
-		
-		int uriType = sURIMatcher.match(uri);
-		SQLiteDatabase sqlDB = database.getWritableDatabase();
-		int rowsDeleted = 0;
-		switch (uriType) {
-			case FRIENDS:
-				rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS, selection,
-						selectionArgs);
-				break;
-			case FRIEND_ID:
-				String id = uri.getLastPathSegment();
-				if (TextUtils.isEmpty(selection)) {
-					rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS,
-							FriendTable.COLUMN_ID + "=" + id, 
-							null);
-				} else {
-					rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS,
-							FriendTable.COLUMN_ID + "=" + id 
-							+ " and " + selection,
-							selectionArgs);
-				}
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown URI: " + uri);
-			}
-		getContext().getContentResolver().notifyChange(uri, null);
-		return rowsDeleted;
-	}
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
@@ -158,7 +120,7 @@ public class MeContentProvider extends ContentProvider {
 		int rowsUpdated = 0;
 		switch (uriType) {
 		case FRIENDS:
-			rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
+			rowsUpdated = sqlDB.update(MeTable.TABLE_ME, 
 					values, 
 					selection,
 					selectionArgs);
@@ -166,14 +128,14 @@ public class MeContentProvider extends ContentProvider {
 		case FRIEND_ID:
 			String id = uri.getLastPathSegment();
 			if (TextUtils.isEmpty(selection)) {
-				rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
+				rowsUpdated = sqlDB.update(MeTable.TABLE_ME, 
 						values,
-						FriendTable.COLUMN_ID + "=" + id, 
+						MeTable.COLUMN_ID + "=" + id, 
 						null);
 			} else {
-				rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
+				rowsUpdated = sqlDB.update(MeTable.TABLE_ME, 
 						values,
-						FriendTable.COLUMN_ID + "=" + id 
+						MeTable.COLUMN_ID + "=" + id 
 						+ " and " 
 						+ selection,
 						selectionArgs);
@@ -188,14 +150,11 @@ public class MeContentProvider extends ContentProvider {
 
 	private void checkColumns(String[] projection) {
 		String[] available = { 
-				FriendTable.COLUMN_FRIEND,
-				FriendTable.COLUMN_CITY,
-				FriendTable.COLUMN_STATE,
-				FriendTable.COLUMN_COUNTRY,
-				FriendTable.COLUMN_TEMP,
-				FriendTable.COLUMN_TXT,
-				FriendTable.COLUMN_ICON,
-				FriendTable.COLUMN_TIME};
+				MeTable.COLUMN_LOCATION,
+				MeTable.COLUMN_TEMP,
+				MeTable.COLUMN_TXT,
+				MeTable.COLUMN_ICON,
+				MeTable.COLUMN_TIME};
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
@@ -204,6 +163,12 @@ public class MeContentProvider extends ContentProvider {
 				throw new IllegalArgumentException("Unknown columns in projection");
 			}
 		}
+	}
+
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 

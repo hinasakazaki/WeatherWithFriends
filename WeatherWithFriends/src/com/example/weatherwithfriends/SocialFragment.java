@@ -54,6 +54,12 @@ public class SocialFragment extends Fragment{
 		
 		FriendController fc = new FriendController();
 		Cursor cur = fc.getFriends(v.getContext());
+		
+		if (!cur.moveToFirst()) {
+			TextView tv = (TextView) v.findViewById(R.id.add_friends);
+		 	tv.setText("It's lonely in here... Add some friends!");
+		}
+		
 		MyContentObserver mObserver = new MyContentObserver(new Handler());
 		cur.registerContentObserver(mObserver);
 		
