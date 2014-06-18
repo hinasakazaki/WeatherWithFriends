@@ -10,9 +10,8 @@ import com.example.weatherwithfriends.me.MeContentProvider;
 import android.support.v4.app.Fragment;
 import android.widget.SimpleCursorAdapter;
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -33,25 +32,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
+public class SocialFragment extends Fragment{
 	
 	private ImageCursorAdapter adapter;
 	ListView list;
 	View rootView;
-	android.support.v4.app.LoaderManager loadermanager;
-	CursorLoader cursorLoader;
-	
-	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.social_fragment, container, false);
  	
-		list = (ListView) rootView.findViewById(R.id.list);
-		
-		loadermanager = getLoaderManager();
-		
-		loadermanager.initLoader(1, null, rootView.getContext());
+		fillData(rootView);
 		
         return rootView;
     }
@@ -63,28 +54,26 @@ public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
 	}
 	
 	
-	private void fillData(Cursor cur) {
+	private void fillData(View v) {
 		
-		/*
 		FriendController fc = new FriendController();
 		Cursor cur = fc.getFriends(v.getContext());
-		*/
+	
 		
 		if (!cur.moveToFirst()) {
 			TextView tv = (TextView) rootView.findViewById(R.id.add_friends);
 		 	tv.setText("It's lonely in here... Add some friends!");
 		}
 		
-		/*
+	
 		MyContentObserver mObserver = new MyContentObserver(new Handler(), rootView);
 		cur.registerContentObserver(mObserver);
-		*/
+		
 		
 		//v.getContext().getContentResolver().registerContentObserver(friendUri, true, myObserver)
-	
 
 		
-		
+		list = (ListView) rootView.findViewById(R.id.list);
 		
 		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT, FriendTable.COLUMN_TEMP };
 		
@@ -104,7 +93,7 @@ public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
 		});
 		
 	}
-/*	
+	
 	private class MyContentObserver extends ContentObserver {
 		private View view;
 		private Cursor cursor;
@@ -124,7 +113,7 @@ public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
 			fillData(view);
 		}  
 	}  
-	*/
+	
 
 	/*Deleting functionality on press */
 	
@@ -216,7 +205,8 @@ public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
 		
 		no.setVisibility(View.GONE);
 	}
-	
+
+	/*
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		Log.v("OnCreateLoader", "blah");
@@ -234,7 +224,7 @@ public class SocialFragment extends Fragment implements LoaderCallbacks<Cursor>{
 		((android.support.v4.widget.SimpleCursorAdapter) list.getAdapter()).swapCursor(null);
 	}  
 	
-	
+	*/
 	
 	
 	

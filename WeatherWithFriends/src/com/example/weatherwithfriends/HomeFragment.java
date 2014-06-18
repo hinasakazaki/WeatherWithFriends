@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment{
 		ImageView iv = (ImageView)v.findViewById(R.id.icon);
 		
 		//load from table, update
-		while (!loaded) {
+		if (loaded) {
 			String location = cur.getString(locColumn);
 			String temp = cur.getString(tempColumn);
 			String txtForecast = cur.getString(txtColumn);

@@ -112,10 +112,14 @@ public class FriendController {
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
 			uTime = cur.getString(dateCol);
-			if (needsUpdate(today, uTime) || (cur.getString(tempCol).length() < 1)) {
+			boolean timesUp = (needsUpdate(today, uTime));
+			boolean noTemp = (cur.getString(tempCol) == null);
+			if (timesUp || noTemp) {
 				//need to async!!! 
-				FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
-				ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));				
+				if (cur.getString(idCol) != null) {
+					FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
+					ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));	
+				}
 			}
 		}
 		return cur;
@@ -125,7 +129,7 @@ public class FriendController {
 		//today.toString(), temperature, txt_forecast, iconurl
 		ContentValues myEntry = new ContentValues();
 		
-		Log.v("UpdateFreindWeather", "we're here!");
+		Log.v("UpdateFreindWeather", "we're here!"); //never here
 		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
@@ -148,6 +152,8 @@ public class FriendController {
 		
 		Uri uri = Uri.parse(MeContentProvider.CONTENT_URI + "/" + id);
 		mContext.getContentResolver().update(uri, myEntry, null, null);
+		
+		HomeFragment.loaded= true;
 	}
 	
 	private boolean needsUpdate(Time t, String uT) {
@@ -157,8 +163,13 @@ public class FriendController {
 		int uDate = Integer.parseInt(uT.substring(6, 8));
 		int uHour = Integer.parseInt(uT.substring(9,11));
 		int uMinute = Integer.parseInt(uT.substring(11, 13));
-
-		if (uYear == t.year && uMonth == t.month && uDate == t.monthDay) {
+		
+//		Log.v("The two dates", t.toString() + uT);
+//		Log.v("Month", ""+ t.month);
+//		Log.v("year", ""+ t.year);
+//		Log.v("daye", ""+ t.monthDay);
+		
+		if (uYear == t.year && uMonth == (t.month+1) && uDate == t.monthDay) {
 			if (uHour == t.hour) {
 				//same hour
 				if (t.minute - uMinute < 15) {

@@ -23,7 +23,7 @@ import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 
-public class FindFriendWeather extends AsyncTask <String, String[], String[]>{ 
+public class FindFriendWeather extends AsyncTask <String, Void, String[]>{ 
 	private final String API_KEY = "86d6e9e9fcdda77c";
 	
 
@@ -41,14 +41,11 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 	protected String[] doInBackground(String... params) {
 		rsa = HTTPRequest(params);
 		return HTTPRequest(params);
-
-		
 	}
 	
-	protected void onPostExecute() {
-		Log.v("On post execute", rsa.toString());
-		FriendController.UpdateFriendWeather(id, mContext, rsa);
-	
+	protected void onPostExecute(String[] result) {
+		Log.v("On friend post execute for friend", result.toString());
+		FriendController.UpdateFriendWeather(id, mContext, result);
 	}
 	
 	private String[] HTTPRequest(String[] location) {
@@ -66,7 +63,7 @@ public class FindFriendWeather extends AsyncTask <String, String[], String[]>{
 			newCountry = country.replaceAll(" ", "_").toLowerCase();
 		}
 		
-		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/conditions/q/" + newCountry + "/" + state + "/" + newCity + ".json";
+		final String request = "http://api.wunderground.com/api/a83d9721f068475e/conditions/q/" + newCountry + "/" + state + "/" + newCity + ".json";
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response;
 		
