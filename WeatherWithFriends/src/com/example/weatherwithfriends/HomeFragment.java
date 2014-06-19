@@ -5,7 +5,6 @@ import com.example.weatherwithfriends.friends.database.FriendTable;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -49,13 +48,18 @@ public class HomeFragment extends Fragment{
 
 		Log.v("Fill data is called", "yay?");
 		
-		FriendController fc = new FriendController();
+		Cursor cur = FriendController.getSelf(mView.getContext());
 		
-		Cursor cur = fc.getSelf(mView.getContext());
+		if (!cur.moveToFirst()) {
+			TextView tv = (TextView) mView.findViewById(R.id.loading);
+		 	tv.setText("Counting Sunrays...");
+		}
 		
 		
-		MyContentObserver mObserver = new MyContentObserver(new Handler(), mView, cur);
+		MyContentObserver mObserver = new MyContentObserver(new Handler(), mView);
 		cur.registerContentObserver(mObserver);
+		
+	
 		
 		if (cur.moveToFirst()) {
 			Log.v("Should be filling stuff up", "lol");
@@ -63,8 +67,7 @@ public class HomeFragment extends Fragment{
 			int tempColumn = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
 			int txtColumn = cur.getColumnIndex(FriendTable.COLUMN_TXT);
 			int iconColumn = cur.getColumnIndex(FriendTable.COLUMN_ICON);
-			int timeColumn = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-			
+		
 			
 			TextView loc = (TextView)mView.findViewById(R.id.location);
 			TextView tv = (TextView)mView.findViewById(R.id.temperature);
@@ -91,10 +94,8 @@ public class HomeFragment extends Fragment{
 	
 	private class MyContentObserver extends ContentObserver {
 		private View view;
-		private Cursor cursor;
-		MyContentObserver(Handler handler, View view, Cursor cursor) {  
+		MyContentObserver(Handler handler, View view) {  
 			super(handler);  
-			this.cursor = cursor;
 			this.view = view;
 		}  
 

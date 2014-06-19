@@ -242,11 +242,11 @@ int id action_context_bar 0x7f05001e
 int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f050025
-int id action_settings 0x7f050056
+int id action_settings 0x7f050057
 int id activity_chooser_view_content 0x7f050026
 int id add 0x7f050047
 int id addButton 0x7f050046
-int id add_friends 0x7f050054
+int id add_friends 0x7f050055
 int id always 0x7f05000b
 int id beginning 0x7f050011
 int id checkbox 0x7f05002e
@@ -256,7 +256,7 @@ int id collapseActionView 0x7f05000d
 int id country 0x7f050044
 int id countryEdit 0x7f050045
 int id default_activity_button 0x7f050029
-int id description 0x7f050053
+int id description 0x7f050054
 int id dialog 0x7f05000e
 int id disableHome 0x7f050008
 int id dropdown 0x7f05000f
@@ -275,10 +275,11 @@ int id homeweather 0x7f05001a
 int id icon 0x7f05002b
 int id ifRoom 0x7f05000a
 int id image 0x7f050028
-int id list 0x7f050055
+int id list 0x7f050056
 int id listMode 0x7f050001
 int id list_item 0x7f05002a
-int id location 0x7f050052
+int id loading 0x7f050051
+int id location 0x7f050053
 int id middle 0x7f050012
 int id nameEdit 0x7f05003f
 int id never 0x7f050009
@@ -310,7 +311,7 @@ int id state 0x7f050042
 int id stateEdit 0x7f050043
 int id submit_area 0x7f05003a
 int id tabMode 0x7f050002
-int id temperature 0x7f050051
+int id temperature 0x7f050052
 int id title 0x7f05002c
 int id top_action_bar 0x7f050021
 int id up 0x7f050022

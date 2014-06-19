@@ -31,9 +31,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 public class FindFriendWeather extends AsyncTask <String, Void, String[]>{ 
-	private final String API_KEY = "86d6e9e9fcdda77c";
 	
-
 	Context mContext;
 	Long id;
 	String[] rsa;
@@ -57,8 +55,6 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	}
 	
 	private String[] HTTPRequest(String[] location) {
-		final String API_KEY = "86d6e9e9fcdda77c";
-		
 		String city = location[0];
 		String state = location[1];
 		String country = location[2];
@@ -121,10 +117,7 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		String txt_forecast = null;
 		String location = null;
 		String temperature = null;
-		Uri friendsUri = FriendContentProvider.CONTENT_URI;
-		
-		Log.v("got to parse JSON!", "good");
-		
+		Uri friendsUri = FriendContentProvider.CONTENT_URI;		
 		
 		if (rString != null) {
 			//parse!
