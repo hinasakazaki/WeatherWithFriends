@@ -195,7 +195,9 @@ public class FriendContentProvider extends ContentProvider {
 				FriendTable.COLUMN_TEMP,
 				FriendTable.COLUMN_TXT,
 				FriendTable.COLUMN_ICON,
-				FriendTable.COLUMN_TIME};
+				FriendTable.COLUMN_TIME,
+				FriendTable.COLUMN_LOCATION,
+				FriendTable.COLUMN_STATUS};
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));

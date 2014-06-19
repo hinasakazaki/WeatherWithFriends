@@ -1,35 +1,20 @@
 package com.example.weatherwithfriends;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.apache.http.util.ByteArrayBuffer;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
-import com.example.weatherwithfriends.friends.database.FriendsDatabaseHelper;
-import com.example.weatherwithfriends.me.MeContentProvider;
-import com.example.weatherwithfriends.me.MeTable;
 
 public class FriendController {
-	private static Uri friendUri;
-	private static Uri meUri;
+	private static Uri friendUri = FriendContentProvider.CONTENT_URI;
 	Time today = new Time(Time.getCurrentTimezone());
 	public boolean asyncDone = false;
 	
@@ -39,7 +24,7 @@ public class FriendController {
 	
 	
 	public void addSelf (Context c, Location loc) {
-		String i = ""+ 1;
+		String i = ""+ 0;
 		FindWeather fw = new FindWeather(c, i);
 		fw.execute(loc);
 	}
@@ -56,11 +41,6 @@ public class FriendController {
 	}
 	
 	public void deleteFriend(View v, Long id) {
-		//View parent = (View) v.getParent();
-		/*
-		FriendContentProvider fcp = new FriendContentProvider();
-		fcp.delete(FriendContentProvider.CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
-		*/
 		v.getContext().getContentResolver().delete(FriendContentProvider.CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
 	}
 	
@@ -71,17 +51,9 @@ public class FriendController {
 		
 		Log.v("At getSelf", "good!");
 		
-		Uri meUri = MeContentProvider.CONTENT_URI;
 		
-		Cursor cur = c.getContentResolver().query(meUri, null, null, null, null);
-		
-		/*
-		int dateCol = cur.getColumnIndex(MeTable.COLUMN_TIME);
-		int idCol = cur.getColumnIndex(MeTable.COLUMN_ID);
-		int locCol = cur.getColumnIndex(MeTable.COLUMN_LOCATION);
-		String uTime;
-		*/
-		
+		Cursor cur = c.getContentResolver().query(friendUri, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
+
 		if (!cur.moveToFirst()) {
 			//deal
 			loc = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
@@ -137,27 +109,25 @@ public class FriendController {
 		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
 		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-		myEntry.put(FriendTable.COLUMN_ICON, image); 		
+		myEntry.put(FriendTable.COLUMN_ICON, image); 	
+		myEntry.put(FriendTable.COLUMN_STATUS,  1);
 		
-		Uri uri = Uri.parse(FriendContentProvider.CONTENT_URI + "/" + id);
 		
-		c.getContentResolver().update(uri, myEntry, null, null);
+		c.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_ID+ "=" + id, null);
 	}
 
 	public static void UpdateMyWeather(long id, Context mContext, String[] result, byte[] image){
 		ContentValues myEntry = new ContentValues();
 		
 		Log.v("UpdateMyWeather!", "MWAHAHAH");
-		myEntry.put(MeTable.COLUMN_TIME, result[0]);
-		myEntry.put(MeTable.COLUMN_TEMP, result[1]);
-		myEntry.put(MeTable.COLUMN_TXT, result[2]);
+		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
+		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
+		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
 		myEntry.put(FriendTable.COLUMN_ICON, image); 	
-		myEntry.put(MeTable.COLUMN_LOCATION, result[4]);
+		myEntry.put(FriendTable.COLUMN_LOCATION, result[4]);
+		myEntry.put(FriendTable.COLUMN_STATUS, 0);
 		
-		Uri uri = Uri.parse(MeContentProvider.CONTENT_URI + "/" + id);
-		mContext.getContentResolver().update(uri, myEntry, null, null);
-		
-		HomeFragment.loaded= true;
+		mContext.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_STATUS+ "=" + 0, null);
 	}
 	
 	private boolean needsUpdate(Time t, String uT) {

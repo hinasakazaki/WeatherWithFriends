@@ -168,6 +168,7 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		
 		protected void onPostExecute(byte[] result) {
 			Log.v("On image post execute", result.toString());
+			//function that you pass in as an argument - callback.onComplete
 			FriendController.UpdateFriendWeather(id, mContext, responseString, result);
 		}
 		

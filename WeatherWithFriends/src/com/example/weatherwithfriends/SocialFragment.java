@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.example.weatherwithfriends.adapter.ImageCursorAdapter;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
-import com.example.weatherwithfriends.me.MeContentProvider;
 
 import android.support.v4.app.Fragment;
 import android.widget.SimpleCursorAdapter;

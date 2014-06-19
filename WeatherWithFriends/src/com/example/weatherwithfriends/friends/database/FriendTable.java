@@ -15,14 +15,15 @@ public class FriendTable {
 	  public static final String COLUMN_TXT = "text";
 	  public static final String COLUMN_ICON = "icon";
 	  public static final String COLUMN_TIME= "time";
-
+	  public static final String COLUMN_LOCATION= "fulllocation";
+	  public static final String COLUMN_STATUS = "friendorme"; //1 if friend, 0 if me 
 
 	  public static void onCreate(SQLiteDatabase database) {
 		StringBuilder sb = new StringBuilder("create table if not exists ").append(TABLE_FRIENDS).append("(").append(COLUMN_ID)
 		.append(" integer primary key autoincrement, ").append(COLUMN_FRIEND).append(" text not null, ").append(COLUMN_CITY) 
-		.append(" text, ").append(COLUMN_STATE).append(" text, ").append(COLUMN_COUNTRY).
+		.append(" text, ").append(COLUMN_STATE).append(" text, ").append(COLUMN_STATUS).append(" text, ").append(COLUMN_COUNTRY).
 		append(" text, ").append(COLUMN_TEMP).append(" text, ").append(COLUMN_TXT).append(" text, ").append(COLUMN_ICON)
-		.append(" text, ").append(COLUMN_TIME).append(" text not null").append(");");
+		.append(" text, ").append(COLUMN_TIME).append(" text, ").append(COLUMN_LOCATION).append(" text ").append(");");
 		Log.v("blah", sb.toString());
 	    database.execSQL(sb.toString());
 	  }

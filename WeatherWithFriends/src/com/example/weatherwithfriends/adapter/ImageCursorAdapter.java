@@ -14,27 +14,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ImageCursorAdapter extends SimpleCursorAdapter{
-	  private Cursor c;
-      private Context context;
+	  private Cursor mCursor ;
+      private Context mContext;
 
 	public ImageCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to) {
 		super(context, layout, c, from, to, 0);
-		this.c = c;
-		this.context = context;
+		this.mCursor = c;
+		this.mContext = context;
 	}
 
 	public View getView(int pos, View inView, ViewGroup parent) {
 	       View v = inView;
 	       if (v == null) {
-	            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	            v = inflater.inflate(R.layout.friend_row, null);
 	       }
-	       this.c.moveToPosition(pos);		
+	       this.mCursor.moveToPosition(pos);		
 	       
-	       String friendName = this.c.getString(this.c.getColumnIndex(FriendTable.COLUMN_FRIEND));
-	       String friendLocation = this.c.getString(this.c.getColumnIndex(FriendTable.COLUMN_CITY)) + ", " +  this.c.getString(this.c.getColumnIndex(FriendTable.COLUMN_STATE));
-	       String friendTemperature = this.c.getString(this.c.getColumnIndex(FriendTable.COLUMN_TXT)) + " " + this.c.getString(this.c.getColumnIndex(FriendTable.COLUMN_TEMP));
+	       String friendName = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_FRIEND));
+	       String friendLocation = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_CITY)) + ", " +  this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_STATE));
+	       String friendTemperature = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_TXT)) + " " + this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_TEMP));
 	       
 	       TextView fName =(TextView) v.findViewById(R.id.friend_name);
 	       TextView fLoc = (TextView) v.findViewById(R.id.friend_location);
@@ -52,7 +52,7 @@ public class ImageCursorAdapter extends SimpleCursorAdapter{
 	       fLoc.setText(friendLocation);
 	       fTemp.setText(friendTemperature);
 	       
-	       byte[] wicon = this.c.getBlob(this.c.getColumnIndex(FriendTable.COLUMN_ICON));
+	       byte[] wicon = this.mCursor.getBlob(this.mCursor.getColumnIndex(FriendTable.COLUMN_ICON));
 	       if (wicon != null) {
 	    	   ImageView iv = (ImageView) v.findViewById(R.id.friend_weather_icon);
 	           iv.setImageBitmap(BitmapFactory.decodeByteArray(wicon, 0, wicon.length));
