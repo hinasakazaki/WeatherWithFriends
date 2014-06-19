@@ -121,6 +121,7 @@ public class FriendController {
 		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
 		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
 		myEntry.put(FriendTable.COLUMN_ICON, image); 	
+		Log.v("My full location", result[4]);
 		myEntry.put(FriendTable.COLUMN_LOCATION, result[4]);
 		myEntry.put(FriendTable.COLUMN_STATUS, 0);
 		myEntry.put(FriendTable.COLUMN_TIME, today.toString());

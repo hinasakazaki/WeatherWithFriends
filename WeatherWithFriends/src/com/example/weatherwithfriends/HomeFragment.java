@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment{
 			String temp = cur.getString(tempColumn);
 			String txtForecast = cur.getString(txtColumn);
 			Bitmap icon = BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length);
-				
+			
 			loc.setText(location);
 	
 			tv.setText(temp);
