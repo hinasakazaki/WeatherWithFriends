@@ -23,12 +23,15 @@ import org.json.JSONTokener;
 import com.example.weatherwithfriends.FindWeather.getImageAsyncTask;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 public class FindFriendWeather extends AsyncTask <String, Void, String[]>{ 
 	
@@ -45,13 +48,25 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	@Override
 	protected String[] doInBackground(String... params) {
 		rsa = HTTPRequest(params);
+		if (isCancelled()) {
+			Activity activity = (Activity) mContext;
+			
+			FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), id);
+			
+			AddFragment.worked(false);
+			Log.v("Cancelled!!!!!!!", "SFDL:KJ");
+
+		}
 		return HTTPRequest(params);
 	}
 	
+	
 	protected void onPostExecute(String[] result) {
+		AddFragment.worked(true);
 		Log.v("On friend post execute for friend", result.toString());
 		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
 		task.execute(result);
+
 	}
 	
 	private String[] HTTPRequest(String[] location) {
@@ -101,7 +116,9 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		
 		try {
 			ret = parseJSON(responseString);
+			
 		} catch (JSONException e) {
+			cancel(true);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

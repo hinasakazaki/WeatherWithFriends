@@ -26,6 +26,11 @@ public class FriendController {
 	public static void addFriend(Context c, String name, String city, String state, String country){
 		Time today = new Time(Time.getCurrentTimezone());
 		
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, null, null, null);
+		int numRows = cur.getCount();
+		Log.v("Number of rows", ""+ numRows);
+		cur.close(); 
+		
 		ContentValues myEntry = new ContentValues();
 	    myEntry.put(FriendTable.COLUMN_FRIEND, name);
 	    myEntry.put(FriendTable.COLUMN_CITY, city);
@@ -34,9 +39,16 @@ public class FriendController {
 	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 	    myEntry.put(FriendTable.COLUMN_STATUS, 1);
 	    c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+	    
+	 
+		FindFriendWeather ffw = new FindFriendWeather(c, ""+ numRows);
+		ffw.execute(city, state, country);	
+	    
 	}
 	
+	
 	public static void deleteFriend(View v, Long id) {
+		Log.v("At delete friend!", "row " + id); 
 		v.getContext().getContentResolver().delete(FriendContentProvider.CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
 	}
 	
@@ -44,34 +56,38 @@ public class FriendController {
 		LocationManager loc = null;
 		Location here = null;
 		String provider;
+		Time today = new Time(Time.getCurrentTimezone());
 		
 		Log.v("At getSelf", "good!");
 		
 		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
 
-		if (!cur.moveToFirst()) {
+		
+		if (!cur.moveToFirst() || needsUpdate(today, cur.getString(cur.getColumnIndex(FriendTable.COLUMN_TIME)))) {
 			//deal
+			Log.v("updating for getSelf", "Don't know if this ever happens");
+			
 			loc = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
 			
 			if (loc.getAllProviders().size() > 0) {
 				provider = loc.getAllProviders().get(0);
 				here = loc.getLastKnownLocation(provider);
 			}
-			
+		
 			else {
 				Log.d("Couldn't find current location", loc.toString());
-			}
+			}	
+			
 			addSelf(c, here);
-		}
+		} 
 		return cur;
 	}
 	
 	public static Cursor getFriends(Context c) {
 			
-		Uri friendsUri = FriendContentProvider.CONTENT_URI;
 		Time today = new Time(Time.getCurrentTimezone());
 		//doesnt return anything 
-		Cursor cur = c.getContentResolver().query(friendsUri, null, FriendTable.COLUMN_STATUS+ "="+ "1", null, null);
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "1", null, null);
 		
 		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
 		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
@@ -110,6 +126,7 @@ public class FriendController {
 		myEntry.put(FriendTable.COLUMN_STATUS,  1);
 		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 		//FriendTable.COLUMN_ID+ "=" + id
+	
 		c.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_ID+"="+id, null);
 	}
 
@@ -126,7 +143,14 @@ public class FriendController {
 		myEntry.put(FriendTable.COLUMN_STATUS, 0);
 		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 		Log.v("UpdateMyWeather!", "Putting in entry");
-		mContext.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+		
+		Cursor cur = mContext.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
+		
+		if (!cur.moveToFirst()) {
+			mContext.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+		} else {
+			mContext.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_STATUS+"="+0, null);
+		}
 	}
 	
 	private static boolean needsUpdate(Time t, String uT) {
