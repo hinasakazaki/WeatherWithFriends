@@ -34,16 +34,21 @@ import android.view.View;
 import android.widget.Toast;
 
 public class FindFriendWeather extends AsyncTask <String, Void, String[]>{ 
-	
+	CallMeBack mCallMeBack;
+	/*
 	Context mContext;
 	Long id;
 	String[] rsa;
-
+    */
 	
+	public FindFriendWeather(CallMeBack callMeBack) {
+		mCallMeBack = callMeBack;
+	}
+	/*
 	public FindFriendWeather(Context c, String id) {
 		mContext = c;
 		this.id = Long.valueOf(id);
-	}
+	}*/
 
 	@Override
 	protected String[] doInBackground(String... params) {
@@ -66,6 +71,8 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		Log.v("On friend post execute for friend", result.toString());
 		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
 		task.execute(result);
+		
+		mCallMeBack.onTaskDone();
 
 	}
 	

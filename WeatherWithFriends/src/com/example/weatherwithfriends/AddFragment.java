@@ -60,7 +60,6 @@ public class AddFragment extends Fragment {
 
 	}
     public static void worked (Boolean b) {
-    	//is this happening?
     	CharSequence text;
     	if (b) {
     		text = "Added " + mName + " to your friends list!";

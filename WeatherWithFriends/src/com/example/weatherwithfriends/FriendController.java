@@ -40,9 +40,17 @@ public class FriendController {
 	    myEntry.put(FriendTable.COLUMN_STATUS, 1);
 	    c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
 	    
-	 
-		FindFriendWeather ffw = new FindFriendWeather(c, ""+ numRows);
-		ffw.execute(city, state, country);	
+	
+		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
+			@Override
+			public void onTaskDone() {
+				//do whatever when friends weather is entered
+			}
+		});
+				
+		ffw.execute(city, state, country);		
+				//(c, ""+ numRows);
+		//ffw.execute(city, state, country);	
 	    
 	}
 	
@@ -104,27 +112,38 @@ public class FriendController {
 			if (timesUp || noTemp) {
 				//need to async!!! 
 				if (cur.getString(idCol) != null) {
-					FindFriendWeather ffw = new FindFriendWeather(c, cur.getString(idCol));
-					ffw.execute(cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));	
+					updateFriend(c, cur.getString(idCol), cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));
+					
 				}
 			}
 		}
 		return cur;
 	}
 	
+	private static void  updateFriend(Context c, String id, String city, String state, String country) {
+		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
+            @Override
+            public void onTaskDone() {
+            
+            	//updateFriendWeather part
+            	ContentValues myEntry = new ContentValues();
+        		
+        		Time today = new Time(Time.getCurrentTimezone());
+        		
+        		Log.v("UpdateFreindWeather", "we're here!"); //never here
+        		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
+        		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
+        		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
+        		myEntry.put(FriendTable.COLUMN_ICON, image); 	
+        		myEntry.put(FriendTable.COLUMN_STATUS,  1);
+        		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
+            }
+		});
+		ffw.execute(city, state, country);		
+	}
 	public static void UpdateFriendWeather(long id, Context c, String[] result, byte[] image) {
 		//today.toString(), temperature, txt_forecast, iconurl
-		ContentValues myEntry = new ContentValues();
 		
-		Time today = new Time(Time.getCurrentTimezone());
-		
-		Log.v("UpdateFreindWeather", "we're here!"); //never here
-		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
-		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
-		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-		myEntry.put(FriendTable.COLUMN_ICON, image); 	
-		myEntry.put(FriendTable.COLUMN_STATUS,  1);
-		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 		//FriendTable.COLUMN_ID+ "=" + id
 	
 		c.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_ID+"="+id, null);
