@@ -1,0 +1,13 @@
+package com.example.weatherwithfriends;
+
+import android.os.AsyncTask;
+
+public class ValidateInput extends AsyncTask<Object, Object, Object> {
+
+	@Override
+	protected Object doInBackground(Object... params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
