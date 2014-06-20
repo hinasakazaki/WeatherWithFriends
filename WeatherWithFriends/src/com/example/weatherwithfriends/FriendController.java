@@ -51,8 +51,9 @@ public class FriendController {
 			@Override
 			public void onTaskError() {
 				//delete friend
+				Log.v("addFriend", "onTaskError");
 				Activity activity = (Activity)c;
-				FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), numRows);
+				FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), numRows+1);
 				AddFragment.worked(false);
 			}
 		});
@@ -149,8 +150,10 @@ public class FriendController {
 
 			@Override
 			public void onTaskError() {
-				// TODO Auto-generated method stub
-				
+				Log.v("addFriend", "onTaskError");
+				Activity activity = (Activity)c;
+				FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), Long.getLong(id));
+				AddFragment.worked(false);
 			}
 		});
 		ffw.execute(city, state, country);		

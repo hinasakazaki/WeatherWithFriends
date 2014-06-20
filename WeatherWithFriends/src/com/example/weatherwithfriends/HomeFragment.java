@@ -59,8 +59,6 @@ public class HomeFragment extends Fragment{
 		MyContentObserver mObserver = new MyContentObserver(new Handler(), mView);
 		cur.registerContentObserver(mObserver);
 		
-	
-		
 		if (cur.moveToFirst()) {
 			Log.v("Should be filling stuff up", "lol");
 			int locColumn = cur.getColumnIndex(FriendTable.COLUMN_LOCATION);
@@ -88,6 +86,8 @@ public class HomeFragment extends Fragment{
 			dv.setText(txtForecast);
 			//image view -- where to construct
 			iv.setImageBitmap(icon); 
+			
+			cur.close();
 		
 		}
 	}

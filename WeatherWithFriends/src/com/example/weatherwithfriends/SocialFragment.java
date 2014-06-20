@@ -55,8 +55,7 @@ public class SocialFragment extends Fragment{
 	
 	private void fillData(View v) {
 		
-		FriendController fc = new FriendController();
-		Cursor cur = fc.getFriends(v.getContext());
+		Cursor cur = FriendController.getFriends(v.getContext());
 	
 		
 		if (!cur.moveToFirst()) {
@@ -91,11 +90,12 @@ public class SocialFragment extends Fragment{
 			}
 		});
 		
+		cur.close();
+		
 	}
 	
 	private class MyContentObserver extends ContentObserver {
 		private View view;
-		private Cursor cursor;
 		MyContentObserver(Handler handler, View view) {  
 			super(handler);  
 			this.view = view;
@@ -157,9 +157,9 @@ public class SocialFragment extends Fragment{
         	
             @Override
             public void onClick(View v) {
-            	FriendController fc = new FriendController();
+     
             	Long tid = (Long)v.getTag();
-            	fc.deleteFriend(v, tid);
+            	FriendController.deleteFriend(v, tid);
             }
            });
         

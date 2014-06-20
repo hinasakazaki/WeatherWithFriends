@@ -62,10 +62,6 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	
 	protected void onPostExecute(String[] result) {
 		AddFragment.worked(true);
-//		Log.v("On friend post execute for friend", result.toString());
-//		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
-//		task.execute(result);
-		
 		mCallMeBack.onTaskDone(result);
 
 	}
@@ -119,11 +115,10 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		
 		try {
 			ret = parseJSON(responseString);
-			
 		} catch (JSONException e) {
 			cancel(true);
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 		
 		return ret;
