@@ -52,15 +52,9 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 
 	@Override
 	protected String[] doInBackground(String... params) {
-		rsa = HTTPRequest(params);
+		String[] returnStringArray = HTTPRequest(params);
 		if (isCancelled()) {
-			Activity activity = (Activity) mContext;
-			
-			FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), id);
-			
-			AddFragment.worked(false);
-			Log.v("Cancelled!!!!!!!", "SFDL:KJ");
-
+			mCallMeBack.onTaskError();
 		}
 		return HTTPRequest(params);
 	}
@@ -68,11 +62,11 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	
 	protected void onPostExecute(String[] result) {
 		AddFragment.worked(true);
-		Log.v("On friend post execute for friend", result.toString());
-		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
-		task.execute(result);
+//		Log.v("On friend post execute for friend", result.toString());
+//		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
+//		task.execute(result);
 		
-		mCallMeBack.onTaskDone();
+		mCallMeBack.onTaskDone(result);
 
 	}
 	

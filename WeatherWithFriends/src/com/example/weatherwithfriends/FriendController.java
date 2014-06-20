@@ -1,5 +1,6 @@
 package com.example.weatherwithfriends;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,11 +24,11 @@ public class FriendController {
 		fw.execute(loc);
 	}
 	
-	public static void addFriend(Context c, String name, String city, String state, String country){
+	public static void addFriend(final Context c, String name, String city, String state, String country){
 		Time today = new Time(Time.getCurrentTimezone());
 		
 		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, null, null, null);
-		int numRows = cur.getCount();
+		final Long numRows = Long.valueOf(cur.getCount());
 		Log.v("Number of rows", ""+ numRows);
 		cur.close(); 
 		
@@ -43,15 +44,20 @@ public class FriendController {
 	
 		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
 			@Override
-			public void onTaskDone() {
+			public void onTaskDone(String[] result) {
 				//do whatever when friends weather is entered
+			}
+
+			@Override
+			public void onTaskError() {
+				//delete friend
+				Activity activity = (Activity)c;
+				FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), numRows);
+				AddFragment.worked(false);
 			}
 		});
 				
 		ffw.execute(city, state, country);		
-				//(c, ""+ numRows);
-		//ffw.execute(city, state, country);	
-	    
 	}
 	
 	
@@ -120,10 +126,10 @@ public class FriendController {
 		return cur;
 	}
 	
-	private static void  updateFriend(Context c, String id, String city, String state, String country) {
+	private static void  updateFriend(final Context c, final String id, String city, String state, String country) {
 		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
             @Override
-            public void onTaskDone() {
+            public void onTaskDone(String[] result) {
             
             	//updateFriendWeather part
             	ContentValues myEntry = new ContentValues();
@@ -134,19 +140,29 @@ public class FriendController {
         		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
         		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
         		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-        		myEntry.put(FriendTable.COLUMN_ICON, image); 	
+        		//myEntry.put(FriendTable.COLUMN_ICON, image); deal somehow with this 	
         		myEntry.put(FriendTable.COLUMN_STATUS,  1);
         		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
+        		
+        		c.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_ID+"="+id, null);
             }
+
+			@Override
+			public void onTaskError() {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 		ffw.execute(city, state, country);		
 	}
+	
+	
 	public static void UpdateFriendWeather(long id, Context c, String[] result, byte[] image) {
 		//today.toString(), temperature, txt_forecast, iconurl
 		
 		//FriendTable.COLUMN_ID+ "=" + id
 	
-		c.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_ID+"="+id, null);
+		
 	}
 
 	public static void UpdateMyWeather(long id, Context mContext, String[] result, byte[] image){
