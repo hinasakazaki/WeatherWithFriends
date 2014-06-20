@@ -78,10 +78,12 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	
 		
 		//replace all spaces with _
-		String newCity = city.replaceAll(" ",  "_").toLowerCase();
+		String newCity = city.trim().replaceAll(" ",  "_").toLowerCase();
 		if (country != null) {
-			newCountry = country.replaceAll(" ", "_").toLowerCase();
+			newCountry = country.trim().replaceAll(" ", "_").toLowerCase();
 		}
+		//if tehre be spaces...
+		
 		
 		final String request = "http://api.wunderground.com/api/a83d9721f068475e/conditions/q/" + newCountry + "/" + state + "/" + newCity + ".json";
 		HttpClient httpclient = new DefaultHttpClient();
@@ -179,8 +181,6 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		
 		protected void onPostExecute(byte[] result) {
 			Log.v("On image post execute", result.toString());
-			//function that you pass in as an argument - callback.onComplete
-			FriendController.UpdateFriendWeather(id, mContext, responseString, result);
 		}
 		
 	}

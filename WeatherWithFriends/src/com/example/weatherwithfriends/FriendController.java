@@ -156,14 +156,6 @@ public class FriendController {
 		ffw.execute(city, state, country);		
 	}
 	
-	
-	public static void UpdateFriendWeather(long id, Context c, String[] result, byte[] image) {
-		//today.toString(), temperature, txt_forecast, iconurl
-		
-		//FriendTable.COLUMN_ID+ "=" + id
-	
-		
-	}
 
 	public static void UpdateMyWeather(long id, Context mContext, String[] result, byte[] image){
 		ContentValues myEntry = new ContentValues();
@@ -195,11 +187,6 @@ public class FriendController {
 		int uDate = Integer.parseInt(uT.substring(6, 8));
 		int uHour = Integer.parseInt(uT.substring(9,11));
 		int uMinute = Integer.parseInt(uT.substring(11, 13));
-		
-//		Log.v("The two dates", t.toString() + uT);
-//		Log.v("Month", ""+ t.month);
-//		Log.v("year", ""+ t.year);
-//		Log.v("daye", ""+ t.monthDay);
 		
 		if (uYear == t.year && uMonth == (t.month+1) && uDate == t.monthDay) {
 			if (uHour == t.hour) {
