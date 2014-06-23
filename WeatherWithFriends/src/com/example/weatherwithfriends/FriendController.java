@@ -41,7 +41,7 @@ public class FriendController {
 		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
 			@Override
 			public void onTaskDone(String[] result) {
-				//do whatever when friends weather is entered
+				AddFragment.worked(true);
 			}
 
 			@Override
@@ -212,7 +212,7 @@ public class FriendController {
 		String uTime;
 		
 		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-			Log.v("are we even here", "UGH");
+			//Log.v("are we even here", "UGH"); yes we are
 			uTime = cur.getString(dateCol);
 			boolean timesUp = (needsUpdate(today, uTime));
 			boolean noTemp = (cur.getString(tempCol) == null);
@@ -273,7 +273,7 @@ public class FriendController {
 
 	private static boolean needsUpdate(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
-		Log.v("at needs Update", t.toString() + uT);
+		//Log.v("at needs Update", t.toString() + uT);
 		int uYear = Integer.parseInt(uT.substring(0,4));
 		int uMonth = Integer.parseInt(uT.substring(4,6));
 		int uDate = Integer.parseInt(uT.substring(6, 8));

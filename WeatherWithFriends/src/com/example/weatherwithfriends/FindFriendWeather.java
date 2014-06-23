@@ -56,7 +56,6 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	
 	
 	protected void onPostExecute(String[] result) {
-		AddFragment.worked(true);
 		mCallMeBack.onTaskDone(result);
 	}
 	
