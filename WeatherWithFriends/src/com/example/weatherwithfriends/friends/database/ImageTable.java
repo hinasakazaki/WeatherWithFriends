@@ -7,18 +7,22 @@ public class ImageTable {
 	 // Database table
 	  public static final String TABLE_IMAGES= "images"; 
 	  public static final String COLUMN_ID = "_id";
-	  public static final String COLUMN_URI = "uri";
-	  public static final String COLUMN_IMAGE = "file";//1 if friend, 0 if me 
+	  public static final String COLUMN_DATE = "date";
+	  public static final String COLUMN_URL = "url";
+	  public static final String COLUMN_FILE = "file";
 
 	  public static void onCreate(SQLiteDatabase database) {
 		StringBuilder sb = new StringBuilder("create table if not exists ").append(TABLE_IMAGES).append("(").append(COLUMN_ID)
-		.append(" integer primary key autoincrement, ").append(COLUMN_URI).append(" text, ").append(COLUMN_IMAGE).append(" text ").append(");");
+		.append(" integer primary key autoincrement, ").append(COLUMN_DATE).append(" text, ").append(COLUMN_URL) 
+		.append(" text, ").append(COLUMN_FILE).append(" text ").append(");");
+	
+		Log.v("making imagedatabase", sb.toString());
 	    database.execSQL(sb.toString());
 	  }
 
 	  public static void onUpgrade(SQLiteDatabase database, int oldVersion,
 	      int newVersion) {
-	    Log.w(ImageTable.class.getName(), "Upgrading database from version "
+	    Log.w(FriendTable.class.getName(), "Upgrading database from version "
 	        + oldVersion + " to " + newVersion
 	        + ", which will destroy all old data");
 	    database.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);

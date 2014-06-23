@@ -28,16 +28,10 @@ import android.text.format.Time;
 import android.util.Log;
 
 public class FindWeather extends AsyncTask<Location, Void, String[]> {
-
-	Context mContext;
-	Long id;
-	String[] rsa;
-	//public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-	//ProgressDialog mProgressDialog = new ProgressDialog(mContext);
+	CallMeBack mCallMeBack;
 	
-	public FindWeather(Context c, String id) {
-		mContext = c;
-		this.id = Long.valueOf(id);
+	public FindWeather(CallMeBack cmb) {
+		mCallMeBack = cmb;
 		/*
 		mProgressDialog.setMessage("Counting sunrays...");
 		mProgressDialog.setIndeterminate(false);
@@ -61,15 +55,12 @@ public class FindWeather extends AsyncTask<Location, Void, String[]> {
     
 	@Override
 	protected String[] doInBackground(Location... params) {
-		rsa = HTTPRequest(params);
-		//rsa is null
-		return rsa;
+		return HTTPRequest(params);
 	}
 	
 	protected void onPostExecute(String[] result) {
 		Log.v("On post execute", "for Home fragment");
-		getImageAsyncTask task = new getImageAsyncTask(id, mContext);
-		task.execute(result);
+		mCallMeBack.onTaskDone(result);
 	}
 	
 	private String[] HTTPRequest(Location[] location) {
@@ -156,59 +147,5 @@ public class FindWeather extends AsyncTask<Location, Void, String[]> {
 		return returnSA;
 	}
 
-	class getImageAsyncTask extends AsyncTask<String, Void, byte[]> {
-		Context mContext;
-		Long id;
-		String[] responseString;
-		
-		public getImageAsyncTask (Long id, Context c) {
-			mContext = c;
-			this.id = id;
-		}
-		@Override
-		protected byte[] doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			responseString = params;
-			return getImage(params[3]);
-		}
-		
-		protected void onPostExecute(byte[] result) {
-			Log.v("On image post execute", result.toString());
-			FriendController.UpdateMyWeather(id, mContext, responseString, result);
-		}
-		
-	}
-	private static byte[] getImage(String iconurl) {
-		//get image stuff
-		URL iUrl = null;
-		try {
-			iUrl = new URL(iconurl);
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			URLConnection ucon = iUrl.openConnection();
-			
-			InputStream is = ucon.getInputStream();
-			
-			BufferedInputStream bis = new BufferedInputStream(is);
-			
-			ByteArrayBuffer baf = new ByteArrayBuffer(500);
-			
-			int current = 0;
-			
-			while((current = bis.read()) != -1) {
-				baf.append((byte) current);
-			}
-			
-			return baf.toByteArray();
-		} catch (Exception e) { //image manager error
-			Log.d("ImageManager", "Error" +e.toString());
-		}
-
-		return null;
-
-	}
+	
 }

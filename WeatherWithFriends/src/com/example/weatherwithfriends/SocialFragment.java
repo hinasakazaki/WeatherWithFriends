@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 public class SocialFragment extends Fragment{
 	
-	private ImageCursorAdapter adapter;
+	private SimpleCursorAdapter adapter;
 	ListView list;
 	View rootView;
 	@Override
@@ -73,11 +73,11 @@ public class SocialFragment extends Fragment{
 		
 		list = (ListView) rootView.findViewById(R.id.list);
 		
-		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_CITY, FriendTable.COLUMN_TXT, FriendTable.COLUMN_TEMP };
+		String[] from = new String[] { FriendTable.COLUMN_FRIEND, FriendTable.COLUMN_LOCATION, FriendTable.COLUMN_TEMP };
 		
 		int[] to = new int[] {R.id.friend_name, R.id.friend_location, R.id.friend_temp};
 		
-		adapter = new ImageCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to);
+		adapter = new SimpleCursorAdapter(this.getActivity(), R.layout.friend_row, cur, from, to, 0);
 		
 		list.setAdapter(adapter);
 		
@@ -90,7 +90,6 @@ public class SocialFragment extends Fragment{
 			}
 		});
 		
-		cur.close();
 		
 	}
 	

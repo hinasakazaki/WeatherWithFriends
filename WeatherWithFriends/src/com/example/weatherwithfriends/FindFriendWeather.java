@@ -20,18 +20,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.example.weatherwithfriends.FindWeather.getImageAsyncTask;
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 public class FindFriendWeather extends AsyncTask <String, Void, String[]>{ 
 	CallMeBack mCallMeBack;
@@ -63,7 +58,6 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	protected void onPostExecute(String[] result) {
 		AddFragment.worked(true);
 		mCallMeBack.onTaskDone(result);
-
 	}
 	
 	private String[] HTTPRequest(String[] location) {
@@ -132,7 +126,7 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		String txt_forecast = null;
 		String location = null;
 		String temperature = null;
-		Uri friendsUri = FriendContentProvider.CONTENT_URI;		
+		Uri friendsUri = FriendContentProvider.FRIEND_CONTENT_URI;		
 		
 		if (rString != null) {
 			//parse!
@@ -153,7 +147,7 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		today.setToNow();
 		
 		//time to update info!
-		String[] returnSA = new String[] {today.toString(), temperature, txt_forecast, iconurl};
+		String[] returnSA = new String[] {today.toString(), temperature, location, txt_forecast, iconurl};
 		
 		return returnSA;
 	}
@@ -212,6 +206,4 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		return null;
 
 	}
-	
-	
 }

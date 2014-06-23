@@ -40,8 +40,6 @@ public class HomeFragment extends Fragment{
 	@Override
 	public void onAttach (Activity activity) {
 		super.onAttach(activity);
-		
-	
 	}
 	
 	private void fillData() {
@@ -68,7 +66,7 @@ public class HomeFragment extends Fragment{
 		
 			
 			TextView loc = (TextView)mView.findViewById(R.id.location);
-			TextView tv = (TextView)mView.findViewById(R.id.temperature);
+			TextView tempv = (TextView)mView.findViewById(R.id.temperature);
 			TextView dv = (TextView)mView.findViewById(R.id.description);
 			ImageView iv = (ImageView)mView.findViewById(R.id.icon);
 			
@@ -77,19 +75,22 @@ public class HomeFragment extends Fragment{
 			String location = cur.getString(locColumn);
 			String temp = cur.getString(tempColumn);
 			String txtForecast = cur.getString(txtColumn);
-			Bitmap icon = BitmapFactory.decodeByteArray(cur.getBlob(iconColumn), 0, cur.getBlob(iconColumn).length);
+			
+			byte[] iconByteArray = FriendController.getImage(mView.getContext(), cur.getString(iconColumn));
+			//throws error because not there yet
+			//Bitmap icon = BitmapFactory.decodeByteArray(iconByteArray, 0, iconByteArray.length);
+					
 			
 			loc.setText(location);
 	
-			tv.setText(temp);
+			tempv.setText(temp);
 				
 			dv.setText(txtForecast);
 			//image view -- where to construct
-			iv.setImageBitmap(icon); 
-			
-			cur.close();
+			//iv.setImageBitmap(icon); 
 		
 		}
+		cur.unregisterContentObserver(mObserver);
 	}
 	
 	private class MyContentObserver extends ContentObserver {

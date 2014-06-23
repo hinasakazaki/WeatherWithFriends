@@ -13,21 +13,17 @@ import android.view.View;
 
 import com.example.weatherwithfriends.friends.contentprovider.FriendContentProvider;
 import com.example.weatherwithfriends.friends.database.FriendTable;
+import com.example.weatherwithfriends.friends.database.ImageTable;
 
 public class FriendController {
 	Time today;
 	public boolean asyncDone = false;
-	
-	public static void addSelf (Context c, Location loc) {
-		String i = ""+ 0;
-		FindWeather fw = new FindWeather(c, i);
-		fw.execute(loc);
-	}
+
 	
 	public static void addFriend(final Context c, String name, String city, String state, String country){
 		Time today = new Time(Time.getCurrentTimezone());
 		
-		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, null, null, null);
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, null, null, null);
 		final Long numRows = Long.valueOf(cur.getCount());
 		Log.v("Number of rows", ""+ numRows);
 		cur.close(); 
@@ -39,9 +35,8 @@ public class FriendController {
 	    myEntry.put(FriendTable.COLUMN_COUNTRY, country);
 	    myEntry.put(FriendTable.COLUMN_TIME, today.toString());
 	    myEntry.put(FriendTable.COLUMN_STATUS, 1);
-	    c.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
+	    c.getContentResolver().insert(FriendContentProvider.FRIEND_CONTENT_URI, myEntry);
 	    
-	
 		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
 			@Override
 			public void onTaskDone(String[] result) {
@@ -56,6 +51,12 @@ public class FriendController {
 				FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), numRows+1);
 				AddFragment.worked(false);
 			}
+
+			@Override
+			public byte[] onTaskFinished(byte[] result) {
+				// TODO Auto-generated method stub
+				return result;
+			}
 		});
 				
 		ffw.execute(city, state, country);		
@@ -64,7 +65,7 @@ public class FriendController {
 	
 	public static void deleteFriend(View v, Long id) {
 		Log.v("At delete friend!", "row " + id); 
-		v.getContext().getContentResolver().delete(FriendContentProvider.CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
+		v.getContext().getContentResolver().delete(FriendContentProvider.FRIEND_CONTENT_URI, FriendTable.COLUMN_ID+ "=" + id, null);
 	}
 	
 	public static Cursor getSelf(Context c) {
@@ -75,7 +76,7 @@ public class FriendController {
 		
 		Log.v("At getSelf", "good!");
 		
-		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
 
 		
 		if (!cur.moveToFirst() || needsUpdate(today, cur.getString(cur.getColumnIndex(FriendTable.COLUMN_TIME)))) {
@@ -92,43 +93,20 @@ public class FriendController {
 			else {
 				Log.d("Couldn't find current location", loc.toString());
 			}	
-			
+		
 			addSelf(c, here);
 		} 
 		return cur;
 	}
 	
-	public static Cursor getFriends(Context c) {
-			
-		Time today = new Time(Time.getCurrentTimezone());
-		//doesnt return anything 
-		Cursor cur = c.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "1", null, null);
-		
-		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
-		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
-		int cityCol = cur.getColumnIndex(FriendTable.COLUMN_CITY);
-		int stateCol = cur.getColumnIndex(FriendTable.COLUMN_STATE);
-		int countryCol = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
-		int tempCol = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
-		String uTime;
-		
-		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-			uTime = cur.getString(dateCol);
-			boolean timesUp = (needsUpdate(today, uTime));
-			boolean noTemp = (cur.getString(tempCol) == null);
-			if (timesUp || noTemp) {
-				//need to async!!! 
-				if (cur.getString(idCol) != null) {
-					updateFriend(c, cur.getString(idCol), cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));
-					
-				}
-			}
-		}
-		return cur;
-	}
 	
-	private static void  updateFriend(final Context c, final String id, String city, String state, String country) {
-		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
+	public static void addSelf (final Context c, Location loc) {
+		String i = ""+ 0;
+//		FindWeather fw = new FindWeather(c, i);
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
+//		fw.execute(loc);
+		
+		FindWeather fw = new FindWeather(new CallMeBack() {
             @Override
             public void onTaskDone(String[] result) {
             
@@ -141,11 +119,130 @@ public class FriendController {
         		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
         		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
         		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-        		//myEntry.put(FriendTable.COLUMN_ICON, image); deal somehow with this 	
+        		myEntry.put(FriendTable.COLUMN_LOCATION, result[4]);
+        		myEntry.put(FriendTable.COLUMN_ICON, result[3]);
+        		myEntry.put(FriendTable.COLUMN_STATUS,  0);
+        		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
+        		
+        		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
+        		
+        		if (!cur.moveToFirst()) {
+        			c.getContentResolver().insert(FriendContentProvider.FRIEND_CONTENT_URI, myEntry);
+        		} else {
+        			c.getContentResolver().update(FriendContentProvider.FRIEND_CONTENT_URI, myEntry, FriendTable.COLUMN_STATUS+"="+0, null);
+        		}
+        		
+            }
+
+			@Override
+			public void onTaskError() {
+				Log.v("This shouldn't happen", "because it's myself, it doesn't error");
+			}
+
+			@Override
+			public byte[] onTaskFinished(byte[] result) {
+				return result;
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		fw.execute(loc);
+	}
+	
+	public static byte[] getImage(final Context c, final String url) {
+		//if imageAlready exists in dataabase
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.IMAGE_CONTENT_URI, null, ImageTable.COLUMN_URL+ "="+ "'" + url  + "'", null, null);
+		if (cur.moveToFirst()) {
+			return cur.getBlob(cur.getColumnIndex(ImageTable.COLUMN_FILE));
+		} else {
+			//this part definitely happens
+			GetImage gi = new GetImage(new CallMeBack(){
+				@Override
+				public void onTaskDone(String[] result) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void onTaskError() {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public byte[] onTaskFinished(byte[] result) {
+					
+					ContentValues myEntry = new ContentValues();
+	        		
+	        		Time today = new Time(Time.getCurrentTimezone());
+	        		
+	        		myEntry.put(ImageTable.COLUMN_URL, url);
+	        		myEntry.put(ImageTable.COLUMN_FILE, result);
+	        		myEntry.put(ImageTable.COLUMN_DATE, today.toString());
+	        		
+	        		c.getContentResolver().insert(FriendContentProvider.IMAGE_CONTENT_URI, myEntry);
+	        		
+	        		return result;
+				}
+				
+			});
+			gi.execute(url);
+		}
+		return null;
+	}
+	
+	public static Cursor getFriends(Context c) {
+			
+		Time today = new Time(Time.getCurrentTimezone());
+		//doesnt return anything 
+		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "1", null, null);
+		
+		int dateCol = cur.getColumnIndex(FriendTable.COLUMN_TIME);
+		int idCol = cur.getColumnIndex(FriendTable.COLUMN_ID);
+		int cityCol = cur.getColumnIndex(FriendTable.COLUMN_CITY);
+		int stateCol = cur.getColumnIndex(FriendTable.COLUMN_STATE);
+		int countryCol = cur.getColumnIndex(FriendTable.COLUMN_COUNTRY);
+		int tempCol = cur.getColumnIndex(FriendTable.COLUMN_TEMP);
+		String uTime;
+		
+		for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+			Log.v("are we even here", "UGH");
+			uTime = cur.getString(dateCol);
+			boolean timesUp = (needsUpdate(today, uTime));
+			boolean noTemp = (cur.getString(tempCol) == null);
+			if (timesUp || noTemp) {
+				//need to async!!! 
+				if (cur.getString(idCol) != null) {
+					updateFriend(c, cur.getString(idCol), cur.getString(cityCol), cur.getString(stateCol),cur.getString(countryCol));		
+				}
+			}
+		}
+		return cur;
+	}
+	
+	private static void  updateFriend(final Context c, final String id, String city, String state, String country) {
+		Log.v("UpdateFriend", "is executing");
+		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
+            @Override
+            public void onTaskDone(String[] result) {
+            
+            	//updateFriendWeather part
+            	ContentValues myEntry = new ContentValues();
+        		
+        		Time today = new Time(Time.getCurrentTimezone());
+        		
+        		Log.v("UpdateFreindWeather", "we're here!"); //never here
+        		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
+        		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
+        		myEntry.put(FriendTable.COLUMN_TXT, result[3]);
+        		Log.v("This hould be full location", result[2]);
+        		myEntry.put(FriendTable.COLUMN_LOCATION, result[2]);
+        		myEntry.put(FriendTable.COLUMN_ICON, result[4]);
         		myEntry.put(FriendTable.COLUMN_STATUS,  1);
         		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
         		
-        		c.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_ID+"="+id, null);
+        		c.getContentResolver().update(FriendContentProvider.FRIEND_CONTENT_URI, myEntry, FriendTable.COLUMN_ID+"="+id, null);
             }
 
 			@Override
@@ -155,34 +252,19 @@ public class FriendController {
 				FriendController.deleteFriend(activity.getWindow().getDecorView().getRootView(), Long.getLong(id));
 				AddFragment.worked(false);
 			}
+
+			@Override
+			public byte[] onTaskFinished(byte[] result) {
+				return result;
+				// TODO Auto-generated method stub
+				
+			}
 		});
 		ffw.execute(city, state, country);		
 	}
 	
-
-	public static void UpdateMyWeather(long id, Context mContext, String[] result, byte[] image){
-		ContentValues myEntry = new ContentValues();
-		Time today = new Time(Time.getCurrentTimezone());
-		
-		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
-		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
-		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
-		myEntry.put(FriendTable.COLUMN_ICON, image); 	
-		Log.v("My full location", result[4]);
-		myEntry.put(FriendTable.COLUMN_LOCATION, result[4]);
-		myEntry.put(FriendTable.COLUMN_STATUS, 0);
-		myEntry.put(FriendTable.COLUMN_TIME, today.toString());
-		Log.v("UpdateMyWeather!", "Putting in entry");
-		
-		Cursor cur = mContext.getContentResolver().query(FriendContentProvider.CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "0", null, null);
-		
-		if (!cur.moveToFirst()) {
-			mContext.getContentResolver().insert(FriendContentProvider.CONTENT_URI, myEntry);
-		} else {
-			mContext.getContentResolver().update(FriendContentProvider.CONTENT_URI, myEntry, FriendTable.COLUMN_STATUS+"="+0, null);
-		}
-	}
 	
+
 	private static boolean needsUpdate(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
 		int uYear = Integer.parseInt(uT.substring(0,4));
@@ -194,7 +276,7 @@ public class FriendController {
 		if (uYear == t.year && uMonth == (t.month+1) && uDate == t.monthDay) {
 			if (uHour == t.hour) {
 				//same hour
-				if (t.minute - uMinute < 15) {
+				if (t.minute - uMinute < 1) {
 					return false;
 				}
 				else {
@@ -204,7 +286,7 @@ public class FriendController {
 			}
 			else if (t.hour > uHour) {
 				//difference between hours
-				if (((60-uMinute) + (t.minute)) <= 15) {
+				if (((60-uMinute) + (t.minute)) < 1) {
 					return false;
 				}
 				else {

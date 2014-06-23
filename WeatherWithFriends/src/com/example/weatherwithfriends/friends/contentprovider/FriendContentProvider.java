@@ -6,6 +6,7 @@ import java.util.HashSet;
 import com.example.weatherwithfriends.FindFriendWeather;
 import com.example.weatherwithfriends.friends.database.FriendTable;
 import com.example.weatherwithfriends.friends.database.FriendsDatabaseHelper;
+import com.example.weatherwithfriends.friends.database.ImageTable;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -23,18 +24,24 @@ import android.util.Log;
 public class FriendContentProvider extends ContentProvider {
 
 	// database
-	private FriendsDatabaseHelper database;
+	private FriendsDatabaseHelper mDatabase;
 
 	// used for the UriMacher
-	private static final int FRIENDS = 10;
-	private static final int FRIEND_ID = 20;
-
+	private static final int FRIENDS = 1;
+	private static final int FRIEND_ID = 2;
+	private static final int IMAGES = 3;
+	private static final int IMAGE_ID = 4;
+	
 	private static final String AUTHORITY = "com.example.weatherwithfriends.friends.contentprovider";
 
-	private static final String BASE_PATH = "friends";
+	private static final String FRIENDS_BASE_PATH = "friends";
+	private static final String IMAGES_BASE_PATH = "images";
 
-	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
-			+ "/" + BASE_PATH);
+	public static final Uri FRIEND_CONTENT_URI = Uri.parse("content://" + AUTHORITY
+			+ "/" + FRIENDS_BASE_PATH);
+	
+	public static final Uri IMAGE_CONTENT_URI = Uri.parse("content://" + AUTHORITY
+			+ "/" + IMAGES_BASE_PATH);
 
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
 			+ "/friends";
@@ -46,14 +53,15 @@ public class FriendContentProvider extends ContentProvider {
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	static {
-		sURIMatcher.addURI(AUTHORITY, BASE_PATH, FRIENDS);
-		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", FRIEND_ID);
+		sURIMatcher.addURI(AUTHORITY, FRIENDS_BASE_PATH, FRIENDS);
+		sURIMatcher.addURI(AUTHORITY, FRIENDS_BASE_PATH + "/#", FRIEND_ID);
+		sURIMatcher.addURI(AUTHORITY, IMAGES_BASE_PATH, IMAGES);
+		sURIMatcher.addURI(AUTHORITY, IMAGES_BASE_PATH + "/#", IMAGE_ID);
 	}
 
 	@Override
 	public boolean onCreate() {
-		database = new FriendsDatabaseHelper(getContext());
-		Log.v("FriendController made", "database shouldn't be null");
+		mDatabase = new FriendsDatabaseHelper(getContext());
 		return false;
 	}
 
@@ -68,22 +76,27 @@ public class FriendContentProvider extends ContentProvider {
 		checkColumns(projection);
 
 		// Set the table
-		queryBuilder.setTables(FriendTable.TABLE_FRIENDS);
-
+		
+		
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
 			case FRIENDS:
+				queryBuilder.setTables(FriendTable.TABLE_FRIENDS);
 				break;
 			case FRIEND_ID:
+				queryBuilder.setTables(FriendTable.TABLE_FRIENDS);
 				// adding the ID to the original query
 				queryBuilder.appendWhere(FriendTable.COLUMN_ID + "="
 						+ uri.getLastPathSegment());
+				break;
+			case IMAGES:
+				queryBuilder.setTables(ImageTable.TABLE_IMAGES);
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);
 			}
 
-		SQLiteDatabase db = database.getWritableDatabase();
+		SQLiteDatabase db = mDatabase.getWritableDatabase();
 		Cursor cursor = queryBuilder.query(db, projection, selection,
 				selectionArgs, null, null, sortOrder);
 		// make sure that potential listeners are getting notified
@@ -101,7 +114,7 @@ public class FriendContentProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		
-		SQLiteDatabase sqlDB = database.getWritableDatabase();
+		SQLiteDatabase sqlDB = mDatabase.getWritableDatabase();
 		int rowsDeleted = 0;
 		
 		long id = 0;
@@ -109,22 +122,28 @@ public class FriendContentProvider extends ContentProvider {
 			case FRIENDS:
 				id = sqlDB.insert(FriendTable.TABLE_FRIENDS, null, values);
 				break;
+			case IMAGES:
+				id = sqlDB.insert(ImageTable.TABLE_IMAGES, null, values);
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);
 			}
 		
 		getContext().getContentResolver().notifyChange(uri, null);
-		return Uri.parse(BASE_PATH + "/" + id);
+		return Uri.parse(FRIENDS_BASE_PATH + "/" + id);
 	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int uriType = sURIMatcher.match(uri);
-		SQLiteDatabase sqlDB = database.getWritableDatabase();
+		SQLiteDatabase sqlDB = mDatabase.getWritableDatabase();
 		int rowsDeleted = 0;
 		switch (uriType) {
 			case FRIENDS:
 				rowsDeleted = sqlDB.delete(FriendTable.TABLE_FRIENDS, selection,
+						selectionArgs);
+				break;
+			case IMAGES:
+				rowsDeleted = sqlDB.delete(ImageTable.TABLE_IMAGES, selection,
 						selectionArgs);
 				break;
 			case FRIEND_ID:
@@ -152,34 +171,40 @@ public class FriendContentProvider extends ContentProvider {
 			String[] selectionArgs) {
 
 		int uriType = sURIMatcher.match(uri);
-		SQLiteDatabase sqlDB = database.getWritableDatabase();
+		SQLiteDatabase sqlDB = mDatabase.getWritableDatabase();
 		int rowsUpdated = 0;
 		switch (uriType) {
-		case FRIENDS:
-			rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
-					values, 
-					selection,
-					selectionArgs);
-			break;
-		case FRIEND_ID:
-			String id = uri.getLastPathSegment();
-			if (TextUtils.isEmpty(selection)) {
+			case FRIENDS:
 				rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
-						values,
-						FriendTable.COLUMN_ID + "=" + id, 
-						null);
-			} else {
-				rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
-						values,
-						FriendTable.COLUMN_ID + "=" + id 
-						+ " and " 
-						+ selection,
+						values, 
+						selection,
 						selectionArgs);
+				break;
+			case IMAGES:
+				rowsUpdated = sqlDB.update(ImageTable.TABLE_IMAGES, 
+						values, 
+						selection,
+						selectionArgs);
+				break;
+			case FRIEND_ID:
+				String id = uri.getLastPathSegment();
+				if (TextUtils.isEmpty(selection)) {
+					rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
+							values,
+							FriendTable.COLUMN_ID + "=" + id, 
+							null);
+				} else {
+					rowsUpdated = sqlDB.update(FriendTable.TABLE_FRIENDS, 
+							values,
+							FriendTable.COLUMN_ID + "=" + id 
+							+ " and " 
+							+ selection,
+							selectionArgs);
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown URI: " + uri);
 			}
-			break;
-		default:
-			throw new IllegalArgumentException("Unknown URI: " + uri);
-		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return rowsUpdated;
 	}
@@ -195,7 +220,12 @@ public class FriendContentProvider extends ContentProvider {
 				FriendTable.COLUMN_ICON,
 				FriendTable.COLUMN_TIME,
 				FriendTable.COLUMN_LOCATION,
-				FriendTable.COLUMN_STATUS};
+				FriendTable.COLUMN_STATUS,
+				ImageTable.COLUMN_URL,
+				ImageTable.COLUMN_DATE,
+				ImageTable.COLUMN_FILE,
+				ImageTable.COLUMN_ID
+				};
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));

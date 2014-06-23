@@ -66,7 +66,7 @@ public class AddFragment extends Fragment {
     	} else {
     		text =  "Please enter your friend again, with the correct city, state, and country!";
     	}
-		Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
     }
     		
 }
