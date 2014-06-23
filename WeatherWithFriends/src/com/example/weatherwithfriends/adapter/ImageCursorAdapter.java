@@ -18,7 +18,6 @@ import android.widget.TextView;
 public class ImageCursorAdapter extends SimpleCursorAdapter{
 	  private Cursor mCursor ;
       private Context mContext;
-
 	public ImageCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to) {
 		super(context, layout, c, from, to, 0);

@@ -75,7 +75,7 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 		//if tehre be spaces...
 		
 		
-		final String request = "http://api.wunderground.com/api/a83d9721f068475e/conditions/q/" + newCountry + "/" + state + "/" + newCity + ".json";
+		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77c/conditions/q/" + newCountry + "/" + state + "/" + newCity + ".json";
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response;
 		

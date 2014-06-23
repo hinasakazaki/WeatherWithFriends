@@ -89,7 +89,6 @@ public class FriendContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 			case IMAGES:
-				Log.v("detected url for images", "in query");
 				queryBuilder.setTables(ImageTable.TABLE_IMAGES);
 				break;
 			default:
@@ -123,7 +122,6 @@ public class FriendContentProvider extends ContentProvider {
 				break;
 			case IMAGES:
 				id = sqlDB.insert(ImageTable.TABLE_IMAGES, null, values);
-				Log.v("detected url for images", "in insert");
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);

@@ -69,7 +69,7 @@ public class FindWeather extends AsyncTask<Location, Void, String[]> {
 		double lon= location[0].getLongitude();
 		
 		
-		final String request = "http://api.wunderground.com/api/a83d9721f068475e/conditions/q/" + lat + "," + lon + ".json";
+		final String request = "http://api.wunderground.com/api/86d6e9e9fcdda77/conditions/q/" + lat + "," + lon + ".json";
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response;
 		

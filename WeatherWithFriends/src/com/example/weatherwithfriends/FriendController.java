@@ -22,6 +22,7 @@ public class FriendController {
 	
 	public static void addFriend(final Context c, String name, String city, String state, String country){
 		Time today = new Time(Time.getCurrentTimezone());
+		today.setToNow();
 		
 		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, null, null, null);
 		final Long numRows = Long.valueOf(cur.getCount());
@@ -114,6 +115,7 @@ public class FriendController {
             	ContentValues myEntry = new ContentValues();
         		
         		Time today = new Time(Time.getCurrentTimezone());
+        		today.setToNow();
         		
         		Log.v("UpdateFreindWeather", "we're here!"); //never here
         		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
@@ -176,6 +178,7 @@ public class FriendController {
 					ContentValues myEntry = new ContentValues();
 	        		
 	        		Time today = new Time(Time.getCurrentTimezone());
+	        		today.setToNow();
 	        		
 	        		myEntry.put(ImageTable.COLUMN_URL, url);
 	        		myEntry.put(ImageTable.COLUMN_FILE, result);
@@ -195,6 +198,7 @@ public class FriendController {
 	public static Cursor getFriends(Context c) {
 			
 		Time today = new Time(Time.getCurrentTimezone());
+		today.setToNow();
 		//doesnt return anything 
 		Cursor cur = c.getContentResolver().query(FriendContentProvider.FRIEND_CONTENT_URI, null, FriendTable.COLUMN_STATUS+ "="+ "1", null, null);
 		
@@ -231,6 +235,7 @@ public class FriendController {
             	ContentValues myEntry = new ContentValues();
         		
         		Time today = new Time(Time.getCurrentTimezone());
+        		today.setToNow();
         		
         		Log.v("UpdateFreindWeather", "we're here!"); //never here
         		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
@@ -267,6 +272,7 @@ public class FriendController {
 
 	private static boolean needsUpdate(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
+		
 		int uYear = Integer.parseInt(uT.substring(0,4));
 		int uMonth = Integer.parseInt(uT.substring(4,6));
 		int uDate = Integer.parseInt(uT.substring(6, 8));
@@ -276,7 +282,7 @@ public class FriendController {
 		if (uYear == t.year && uMonth == (t.month+1) && uDate == t.monthDay) {
 			if (uHour == t.hour) {
 				//same hour
-				if (t.minute - uMinute < 1) {
+				if (t.minute - uMinute < 15) {
 					return false;
 				}
 				else {
@@ -286,7 +292,7 @@ public class FriendController {
 			}
 			else if (t.hour > uHour) {
 				//difference between hours
-				if (((60-uMinute) + (t.minute)) < 1) {
+				if (((60-uMinute) + (t.minute)) < 15) {
 					return false;
 				}
 				else {
