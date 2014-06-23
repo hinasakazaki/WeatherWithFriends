@@ -1,7 +1,9 @@
 package com.example.weatherwithfriends.adapter;
 
+import com.example.weatherwithfriends.FriendController;
 import com.example.weatherwithfriends.R;
 import com.example.weatherwithfriends.friends.database.FriendTable;
+import com.example.weatherwithfriends.friends.database.ImageTable;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -32,8 +34,11 @@ public class ImageCursorAdapter extends SimpleCursorAdapter{
 	       }
 	       this.mCursor.moveToPosition(pos);		
 	       
+	      
 	       String friendName = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_FRIEND));
-	       String friendLocation = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_CITY)) + ", " +  this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_STATE));
+	      
+	       String friendLocation = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_LOCATION));
+	        
 	       String friendTemperature = this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_TXT)) + " " + this.mCursor.getString(this.mCursor.getColumnIndex(FriendTable.COLUMN_TEMP));
 	       
 	       TextView fName =(TextView) v.findViewById(R.id.friend_name);
@@ -48,11 +53,12 @@ public class ImageCursorAdapter extends SimpleCursorAdapter{
 	       } else {
 	    	   fIcon.setImageResource(R.drawable.judy);
 	       }
-	       fName.setText(friendName);
-	       fLoc.setText(friendLocation);
+	      
 	       fTemp.setText(friendTemperature);
+	       fLoc.setText(friendLocation);
+	       fName.setText(friendName);
 	       
-	       byte[] wicon = this.mCursor.getBlob(this.mCursor.getColumnIndex(FriendTable.COLUMN_ICON));
+	       byte[] wicon = FriendController.getImage(mContext, this.mCursor.getString(mCursor.getColumnIndex(FriendTable.COLUMN_ICON)));
 	       if (wicon != null) {
 	    	   ImageView iv = (ImageView) v.findViewById(R.id.friend_weather_icon);
 	           iv.setImageBitmap(BitmapFactory.decodeByteArray(wicon, 0, wicon.length));

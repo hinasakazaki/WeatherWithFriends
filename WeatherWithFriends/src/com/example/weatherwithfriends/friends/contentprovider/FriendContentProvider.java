@@ -57,6 +57,7 @@ public class FriendContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, FRIENDS_BASE_PATH + "/#", FRIEND_ID);
 		sURIMatcher.addURI(AUTHORITY, IMAGES_BASE_PATH, IMAGES);
 		sURIMatcher.addURI(AUTHORITY, IMAGES_BASE_PATH + "/#", IMAGE_ID);
+		Log.v("added all the URIs", "to the URIMatcher");
 	}
 
 	@Override
@@ -75,9 +76,7 @@ public class FriendContentProvider extends ContentProvider {
 		// check if the caller has requested a column which does not exists
 		checkColumns(projection);
 
-		// Set the table
-		
-		
+		// Set the table this works for both 
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
 			case FRIENDS:
@@ -90,6 +89,7 @@ public class FriendContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 			case IMAGES:
+				Log.v("detected url for images", "in query");
 				queryBuilder.setTables(ImageTable.TABLE_IMAGES);
 				break;
 			default:
@@ -113,7 +113,6 @@ public class FriendContentProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
-		
 		SQLiteDatabase sqlDB = mDatabase.getWritableDatabase();
 		int rowsDeleted = 0;
 		
@@ -124,7 +123,9 @@ public class FriendContentProvider extends ContentProvider {
 				break;
 			case IMAGES:
 				id = sqlDB.insert(ImageTable.TABLE_IMAGES, null, values);
+				Log.v("detected url for images", "in insert");
 			default:
+				Log.v("detected uri not matching", values.toString());
 				throw new IllegalArgumentException("Unknown URI: " + uri);
 			}
 		
