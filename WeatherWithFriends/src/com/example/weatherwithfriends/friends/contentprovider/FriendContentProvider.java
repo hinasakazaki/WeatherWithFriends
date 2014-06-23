@@ -124,8 +124,8 @@ public class FriendContentProvider extends ContentProvider {
 			case IMAGES:
 				id = sqlDB.insert(ImageTable.TABLE_IMAGES, null, values);
 				Log.v("detected url for images", "in insert");
+				break;
 			default:
-				Log.v("detected uri not matching", values.toString());
 				throw new IllegalArgumentException("Unknown URI: " + uri);
 			}
 		
