@@ -74,6 +74,7 @@ public class FriendController {
 		Location here = null;
 		String provider;
 		Time today = new Time(Time.getCurrentTimezone());
+		today.setToNow();
 		
 		Log.v("At getSelf", "good!");
 		
@@ -110,14 +111,14 @@ public class FriendController {
 		FindWeather fw = new FindWeather(new CallMeBack() {
             @Override
             public void onTaskDone(String[] result) {
-            
-            	//updateFriendWeather part
+            	
+            	Log.v("Myself is updated", result[1]);
+            	
             	ContentValues myEntry = new ContentValues();
         		
         		Time today = new Time(Time.getCurrentTimezone());
         		today.setToNow();
         		
-        		Log.v("UpdateFreindWeather", "we're here!"); //never here
         		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
         		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
         		myEntry.put(FriendTable.COLUMN_TXT, result[2]);
@@ -237,7 +238,7 @@ public class FriendController {
         		Time today = new Time(Time.getCurrentTimezone());
         		today.setToNow();
         		
-        		Log.v("UpdateFreindWeather", "we're here!"); //never here
+        		Log.v("UpdateFreindWeather", "we're here!"); //never here -- well, it is, but I have no fucking clue why
         		myEntry.put(FriendTable.COLUMN_TIME, result[0]);
         		myEntry.put(FriendTable.COLUMN_TEMP, result[1]);
         		myEntry.put(FriendTable.COLUMN_TXT, result[3]);
@@ -272,7 +273,7 @@ public class FriendController {
 
 	private static boolean needsUpdate(Time t, String uT) {
 		//toString time is stored YYYYMMDDTHHMMSS
-		
+		Log.v("at needs Update", t.toString() + uT);
 		int uYear = Integer.parseInt(uT.substring(0,4));
 		int uMonth = Integer.parseInt(uT.substring(4,6));
 		int uDate = Integer.parseInt(uT.substring(6, 8));

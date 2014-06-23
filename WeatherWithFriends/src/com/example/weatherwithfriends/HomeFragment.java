@@ -78,8 +78,10 @@ public class HomeFragment extends Fragment{
 			
 			byte[] iconByteArray = FriendController.getImage(mView.getContext(), cur.getString(iconColumn));
 			//throws error because not there yet
-			Bitmap icon = BitmapFactory.decodeByteArray(iconByteArray, 0, iconByteArray.length);
-					
+			Bitmap icon = null;
+			if (iconByteArray != null) {
+				icon = BitmapFactory.decodeByteArray(iconByteArray, 0, iconByteArray.length);
+			}	
 			
 			loc.setText(location);
 	
