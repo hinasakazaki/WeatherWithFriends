@@ -1,9 +1,0 @@
-package com.example.weatherwithfriends;
-
-public class FindsWeather extends AsyncTask{
-	private Context context;
-	
-	public FindsWeather(Context context) {
-		this.context = context;
-	}
-}

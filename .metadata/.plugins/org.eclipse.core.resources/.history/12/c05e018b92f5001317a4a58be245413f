@@ -1,5 +1,0 @@
-package com.example.weatherwithfriends;
-
-public interface AsyncTaskCompleteListener {
-	public void onTaskComplete(String[] result);
-}

@@ -1,8 +1,0 @@
-package com.example.weatherwithfriends;
-
-import android.location.Location;
-import android.os.AsyncTask;
-
-public class FindWeather extends AsyncTask<Location, String[], String[]> {
-
-}

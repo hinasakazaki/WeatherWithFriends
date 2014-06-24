@@ -1,7 +1,0 @@
-package com.example.weatherwithfriends;
-
-import android.content.ContentValues;
-
-public interface AsyncTaskCompleteListener<T> {
-	public void onTaskComplete(String[] result, ContentValues myEntry);
-}
