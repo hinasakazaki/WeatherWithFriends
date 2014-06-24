@@ -228,6 +228,9 @@ public class FriendController {
 	
 	private static void  updateFriend(final Context c, final String id, String city, String state, String country) {
 		Log.v("UpdateFriend", "is executing");
+		if (id == null) {
+			return;
+		}
 		FindFriendWeather ffw = new FindFriendWeather(new CallMeBack() {
             @Override
             public void onTaskDone(String[] result) {

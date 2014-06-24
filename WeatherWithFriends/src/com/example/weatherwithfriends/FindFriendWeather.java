@@ -49,6 +49,7 @@ public class FindFriendWeather extends AsyncTask <String, Void, String[]>{
 	protected String[] doInBackground(String... params) {
 		String[] returnStringArray = HTTPRequest(params);
 		if (isCancelled()) {
+			Log.v("It's cancelled", "HAHA");
 			mCallMeBack.onTaskError();
 		}
 		return HTTPRequest(params);
